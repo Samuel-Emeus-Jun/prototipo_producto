@@ -13,11 +13,20 @@ df.columns = [
 ]
 
 ##Mostrar el DataFrame con los encabezados más legibles
-##print(df.head())
+#print(df.head())
 
 ##Mostrar los encabezados con su índice
+# headers_with_index = [(index, col) for index, col in enumerate(df.columns)]
+# headers = [col for col in df.columns]
+# print(headers_with_index)
+# print(headers)
+print(df.iloc[:, 40])
 
-headers_with_index = [(index, col) for index, col in enumerate(df.columns)]
-headers = [col for col in df.columns]
-print(headers_with_index)
-print(headers)
+def drop_na_rows(df, start_col, end_col):
+    cols_to_check = df.columns[start_col:end_col + 1]
+    df_cleaned = df.dropna(subset=cols_to_check)
+    return df_cleaned
+
+df = drop_na_rows(df, 37, 40)
+df = drop_na_rows(df, 42, 43)
+
