@@ -30,7 +30,7 @@ def grit_150(dataframe):
     df = dataframe.dropna(subset=dataframe.columns[37:40+1])
     df = dataframe.dropna(subset=dataframe.columns[42:43+1])
     #dataframe.iloc[:, 3] = pd.to_datetime(dataframe.iloc[:, 3], errors='coerce')
-    df['Fecha'] = pd.to_datetime(dataframe.iloc[:, 3], format = 'mixed', dayfirst = False).dt.date
+    df['Fecha'] = pd.to_datetime(dataframe.iloc[:, 3], format = 'mixed').dt.strftime('%d-%m-%Y')
 
     return df
     
