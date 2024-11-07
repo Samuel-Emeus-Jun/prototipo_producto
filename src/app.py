@@ -16,9 +16,29 @@ def upload_form():
 # Ruta para procesar el archivo CSV (simulación por ahora)
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    # Por ahora, solo simulamos que se subió un archivo correctamente
-    # En el futuro, aquí procesaremos el archivo
-    return redirect(url_for('reporte_general'))
+    # Verificar si hay un archivo en el formulario
+    if 'file' not in request.files:
+        return 'No se adjuntó ningún archivo'
+    
+    file = request.files['file']
+
+    # Verificar que se seleccionó un archivo
+    if file.filename == '':
+        return 'No se seleccionó ningún archivo'
+
+    # Verificar que el archivo sea un .csv
+    if file and file.filename.endswith('.csv'):
+        # Leer el archivo CSV directamente en un DataFrame
+        df = pd.read_csv(file)
+        
+        # Verificar si carga correctamente el archivo en un df
+        #print(df)
+            
+        # Continuar con el flujo de datos (por ahora solo redirigimos al reporte anual)
+        return redirect(url_for('reporte_general'))
+    
+    return 'El archivo debe ser un archivo CSV (.csv)'
+
 
 # Ruta para el Reporte General
 @app.route('/general')
