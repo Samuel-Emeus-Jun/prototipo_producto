@@ -1,6 +1,7 @@
 ##AQUÍ VAMOS A INSERTAR LAS FUNCIONES 
 ##DE PROCESAMIENTO DE DATOS
 import pandas as pd
+from tabulate import tabulate
 
 def unir_string_headers():
     df.columns = [
@@ -59,7 +60,8 @@ df = grit_150(df)
 
 #print(df.iloc[:, 3])
 #print(df.iloc[:, 16].to_list())
-print(df['Tiempo de Entrega'])
+#print(df['Tiempo de Entrega'])
 #print(df.xs('Ana Aguirre', axis=1, level=1))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
 #print(colaboradores)
+print(tabulate(df, tablefmt='psql'))
