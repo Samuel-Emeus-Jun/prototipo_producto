@@ -38,16 +38,8 @@ def grit_150(dataframe):
         valor = row[otros_idx]
         if pd.notna(valor) and valor in subheaders:
             df.loc[idx, (slice(None), valor)] = valor
-
-
-
-    # df_melted = dataframe.melt(id_vars = [('Unnamed: 36_level_0', 'Otro (especifique)')], var_name = ["Nivel 1", "columna"], value_name = 'valor')
-    # valores_desordenados = df_melted[df_melted[('Unnamed: 36_level_0', 'Otro (especifique)')].notna()]
-    # for _, row in valores_desordenados.iterrows():
-    #     col_destino = row[('Unnamed: 36_level_0', 'Otro (especifique)')]
-    #     idx = row.name
-    #     df.loc[idx, ('Nivel 1', col_destino)] = col_destino
-
+    ##Convertir columnas cualitativas a cuantitativas
+    
 
     return df
     
@@ -55,13 +47,15 @@ def grit_150(dataframe):
 df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
 
 #unir_string_headers()
+colaboradores = df.columns.get_level_values(1)[16:35+1].to_list()
 df = grit_150(df)
 
 
 ##VISORES
 
-# print(df.iloc[:, 3])
-print(df.iloc[:, 16].to_list())
-# print(df['Fecha'])
+#print(df.iloc[:, 3])
+#print(df.iloc[:, 16].to_list())
+#print(df['Fecha'])
 #print(df.xs('Ana Aguirre', axis=1, level=1))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
+print(colaboradores)
