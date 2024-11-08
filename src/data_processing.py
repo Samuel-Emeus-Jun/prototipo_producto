@@ -39,8 +39,12 @@ def grit_150(dataframe):
         if pd.notna(valor) and valor in subheaders:
             df.loc[idx, (slice(None), valor)] = valor
     ##Convertir columnas cualitativas a cuantitativas
-    
-
+    map_dict = {"Pésimo" : 0, "Muy Malo" : 1, "Malo" : 3, "Regular - Malo" : 5,
+                "Regular - Bueno" : 6, "Bueno" : 8, "Muy Bueno" : 9, "Excelente" : 10}
+    df['Atencion'] = df.iloc[:, 37].map(map_dict)
+    df['Profesionalismo'] = df.iloc[:, 38].map(map_dict)
+    df['Tiempo de Entrega'] = df.iloc[:, 39].map(map_dict)
+    df['Calidad del Producto'] = df.iloc[:, 40].map(map_dict)
     return df
     
 
@@ -55,7 +59,7 @@ df = grit_150(df)
 
 #print(df.iloc[:, 3])
 #print(df.iloc[:, 16].to_list())
-#print(df['Fecha'])
+print(df['Tiempo de Entrega'])
 #print(df.xs('Ana Aguirre', axis=1, level=1))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
-print(colaboradores)
+#print(colaboradores)
