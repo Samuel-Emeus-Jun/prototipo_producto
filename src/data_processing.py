@@ -23,7 +23,8 @@ def unir_string_headers():
 
 ###GRIT 150: Funciones para limpieza tosca del df
 
-#Funcion para droppear filas con valores nulos
+##TIMEDATE Completo 
+
 def grit_150(dataframe):
 
     ##Droppea las filas con valores nulos en las columnas 37 a 43, sin contar la 41
@@ -45,8 +46,20 @@ def grit_150(dataframe):
     df['Profesionalismo'] = df.iloc[:, 38].map(map_dict)
     df['Tiempo de Entrega'] = df.iloc[:, 39].map(map_dict)
     df['Calidad del Producto'] = df.iloc[:, 40].map(map_dict)
-    return df
     
+    return df
+
+
+##FIltrar grit_150 a 12 meses    
+def grit_1200(): 
+    return 0
+
+
+##Filtrar grit_150 a 3 meses
+def grit_3000():
+    return 0
+
+
 
 df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
 
