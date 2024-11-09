@@ -1,6 +1,9 @@
 ##AQUÍ VAMOS A INSERTAR LAS FUNCIONES 
 ##DE PROCESAMIENTO DE DATOS
 import pandas as pd
+from tabulate import tabulate
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 ##TIMEDATE Completo 
 
@@ -33,7 +36,6 @@ def limpiar_dataframe(dataframe):
     
     return df
 
-
 ##FIltrar df obtenido de limpiar_df a 12 meses    
 def filtro_12_meses(): 
     return 0
@@ -51,12 +53,13 @@ df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0
 
 df = limpiar_dataframe(df)
 
-
 ##VISORES
 
 #print(df.iloc[:, 3])
 #print(df.iloc[:, 16].to_list())
 print(df['Fecha'])
+
 #print(df.xs('Ana Aguirre', axis=1, level=1))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
 #print(colaboradores)
+#print(tabulate(df, tablefmt='psql'))
