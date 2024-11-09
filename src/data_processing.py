@@ -2,6 +2,8 @@
 ##DE PROCESAMIENTO DE DATOS
 import pandas as pd
 from tabulate import tabulate
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 def unir_string_headers():
     df.columns = [
@@ -11,27 +13,14 @@ def unir_string_headers():
         for col1, col2 in df.columns
     ]
 
-
-##Mostrar el DataFrame con los encabezados más legibles
-#print(df.head())
-
-##Mostrar los encabezados con su índice
-# headers_with_index = [(index, col) for index, col in enumerate(df.columns)]
-# headers = [col for col in df.columns]
-# print(headers_with_index)
-# print(headers)
-
-
-###GRIT 150: Funciones para limpieza tosca del df
-
-#Funcion para droppear filas con valores nulos
+##GRIT 150: Funciones para limpieza tosca del df
 def grit_150(dataframe):
-
-    ##Droppea las filas con valores nulos en las columnas 37 a 43, sin contar la 41
+    #Droppea las filas con valores nulos en las columnas 37 a 43, sin contar la 41
     df = dataframe.dropna(subset=dataframe.columns[37:40+1])
     df = dataframe.dropna(subset=dataframe.columns[42:43+1])
-    #Convierte la columna de fechas a formato que todos podamos leer
-    df['Fecha'] = pd.to_datetime(dataframe.iloc[:, 3], format = 'mixed').dt.strftime('%d-%m-%Y')
+    #Crea la columna de fechas y cambia de tipo <object> a <datetime> para hacer operaciones con fechas
+    df['Fecha'] = pd.to_datetime(dataframe.iloc[:, 3].str[:10])
+    #print(df['Fecha'])
     ##Intento de Melt para ordenar los valores de la columna 'Otro (especifique)'
     otros_idx = df.columns.get_loc(('Unnamed: 36_level_0', 'Otro (especifique)'))
     subheaders = df.columns.levels[1]
@@ -46,16 +35,34 @@ def grit_150(dataframe):
     df['Profesionalismo'] = df.iloc[:, 38].map(map_dict)
     df['Tiempo de Entrega'] = df.iloc[:, 39].map(map_dict)
     df['Calidad del Producto'] = df.iloc[:, 40].map(map_dict)
-    return df
     
+    return df
+
+
+##FIltrar grit_150 a 12 meses    
+def grit_1200(df_general): 
+    #Establecer la fecha límite para filtrar los datos
+    fecha_limite = datetime.now() - relativedelta(months=12)
+    #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
+    df_last_12_moths=df_general[df_general['Fecha'] > fecha_limite]
+    print(df_last_12_moths.iloc[:, -5:])
+    return df_last_12_moths
+
+##Filtrar grit_150 a 3 meses
+def grit_3000(df_general):
+    #Establecer la fecha límite para filtrar los datos
+    fecha_limite = datetime.now() - relativedelta(months=3)
+    #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
+    df_last_3_months=df_general[df_general['Fecha'] > fecha_limite]
+    print(df_last_3_months.iloc[:, -5:])
+    return df_last_3_months
 
 df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
 
 #unir_string_headers()
 colaboradores = df.columns.get_level_values(1)[16:35+1].to_list()
-df = grit_150(df)
-
-
+grit_1200(grit_150(df))
+grit_3000(grit_150(df))
 ##VISORES
 
 #print(df.iloc[:, 3])
@@ -64,4 +71,4 @@ df = grit_150(df)
 #print(df.xs('Ana Aguirre', axis=1, level=1))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
 #print(colaboradores)
-print(tabulate(df, tablefmt='psql'))
+#print(tabulate(df, tablefmt='psql'))
