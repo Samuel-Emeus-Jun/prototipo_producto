@@ -12,13 +12,12 @@ from dateutil.relativedelta import relativedelta
 ##ordena los valores de la columna 'Otro (especifique)' en los colaboradores correspondientes y genera columnas cuantitativas a partir de columnas cualitativas
 
 def limpiar_dataframe(dataframe):
-    
-    df = dataframe
-    ##Droppea las filas con valores nulos en las columnas 37 a 43, sin contar la 41
+    #Droppea las filas con valores nulos en las columnas 37 a 43, sin contar la 41
+    df=dataframe
     df = df.dropna(subset=df.columns[37:40+1])
     df = df.dropna(subset=df.columns[42:43+1])
-    #Convierte la columna de fechas a formato que todos podamos leer
-    df['Fecha'] = pd.to_datetime(df.iloc[:, 3], format = 'mixed').dt.strftime('%d-%m-%Y')
+    #Crea la columna de fechas y cambia de tipo <object> a <datetime> para hacer operaciones con fechas
+    df['Fecha'] = pd.to_datetime(dataframe.iloc[:, 3].str[:10])
     ##Ordenar los valores de la columna 'Otro (especifique)' en los colaboradores correspondientes
     otros_idx = 36 ##df.columns.get_loc(('Unnamed: 36_level_0', 'Otro (especifique)'))
     subheaders = df.columns.levels[1]
@@ -33,31 +32,44 @@ def limpiar_dataframe(dataframe):
     df['Profesionalismo'] = df.iloc[:, 38].map(map_dict)
     df['Tiempo de Entrega'] = df.iloc[:, 39].map(map_dict)
     df['Calidad del Producto'] = df.iloc[:, 40].map(map_dict)
-    
     return df
 
-##FIltrar df obtenido de limpiar_df a 12 meses    
-def filtro_12_meses(): 
-    return 0
 
+##FIltrar df obtenido de limpiar_df a 12 meses   
+def filtro_12_meses(df_general): 
+    #Establecer la fecha límite para filtrar los datos
+    fecha_limite = datetime.now() - relativedelta(months=12)
+    #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
+    df_last_12_moths=df_general[df_general['Fecha'] > fecha_limite]
+    #Imprimir las últimas 5 columnas del DataFrame *Pura vista, no va a estar en el código final*
+    print(df_last_12_moths.iloc[:, -5:])
+    return df_last_12_moths
 
 ##Filtrar df obtenido de limpiar_df a 3 meses
-def filtro_3_meses():
-    return 0
-
-
+def filtro_3_meses(df_general):
+    #Establecer la fecha límite para filtrar los datos
+    fecha_limite = datetime.now() - relativedelta(months=3)
+    #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
+    df_last_3_months=df_general[df_general['Fecha'] > fecha_limite]
+    #Imprimir las últimas 5 columnas del DataFrame *Pura vista, no va a estar en el código final*
+    print(df_last_3_months.iloc[:, -5:])
+    return df_last_3_months
 
 df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
+df=limpiar_dataframe(df)
 
+print(df.iloc[:, -5:])
+filtro_12_meses(limpiar_dataframe(df))
+filtro_3_meses(limpiar_dataframe(df))
 
+#Imprimir las últimas 5 columnas del dataframe para corroborar la correcta inserción de los datos generados
 
-df = limpiar_dataframe(df)
 
 ##VISORES
 
 #print(df.iloc[:, 3])
 #print(df.iloc[:, 16].to_list())
-print(df['Fecha'])
+#print(df['Fecha'])
 
 #print(df.xs('Ana Aguirre', axis=1, level=1))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
