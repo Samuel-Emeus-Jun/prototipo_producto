@@ -4,6 +4,10 @@ import pandas as pd
 
 ##TIMEDATE Completo 
 
+
+##Limpieza general del DataFrame: Elimina filas con valores nulos en columnas 37 a 43, sin contar la 41, convierte la columna de fechas a formato que todos podamos leer, 
+##ordena los valores de la columna 'Otro (especifique)' en los colaboradores correspondientes y genera columnas cuantitativas a partir de columnas cualitativas
+
 def limpiar_dataframe(dataframe):
     
     df = dataframe
@@ -52,7 +56,7 @@ df = limpiar_dataframe(df)
 
 #print(df.iloc[:, 3])
 #print(df.iloc[:, 16].to_list())
-# print(df['Tiempo de Entrega'])
+print(df['Fecha'])
 #print(df.xs('Ana Aguirre', axis=1, level=1))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
 #print(colaboradores)
