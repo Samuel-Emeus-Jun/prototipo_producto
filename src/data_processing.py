@@ -4,12 +4,11 @@ import pandas as pd
 
 ##TIMEDATE Completo 
 
-
-##Limpieza general del DataFrame: Elimina filas con valores nulos en columnas 37 a 43, sin contar la 41, convierte la columna de fechas a formato que todos podamos leer, 
-##ordena los valores de la columna 'Otro (especifique)' en los colaboradores correspondientes y genera columnas cuantitativas a partir de columnas cualitativas
-
 def limpiar_dataframe(dataframe):
-    
+
+    ##Limpieza general del DataFrame: Elimina filas con valores nulos en columnas 37 a 43, sin contar la 41, convierte la columna de fechas a formato que todos podamos leer, 
+    ##ordena los valores de la columna 'Otro (especifique)' en los colaboradores correspondientes y genera columnas cuantitativas a partir de columnas cualitativas
+
     df = dataframe
     ##Droppea las filas con valores nulos en las columnas 37 a 43, sin contar la 41
     df = df.dropna(subset=df.columns[37:40+1])
@@ -35,17 +34,24 @@ def limpiar_dataframe(dataframe):
 
 def mappear_df(dataframe):
 
+    ##Función creada para obtener un df mas limpio, de mas fácil acceso a las columnas y  
+    ##disminuir la cantidad de data que será procesada en plot_generator.py
+
     mapped_df = pd.DataFrame()
     mapped_df = pd.concat([mapped_df, dataframe['Fecha']], axis =1)
     mapped_df = pd.concat([mapped_df, dataframe.iloc[:, 10].rename("Nombre de la Compañía")], axis =1)
+    ##Esto es para agregar a los colaboradores
     for col in dataframe.iloc[:, 16 : 35+1]:
         mapped_df = pd.concat([mapped_df, dataframe[col].rename(dataframe[col].name[1])], axis =1)
+    ##Aquí también se puede agregar las calificaciones cualitativas   
     # for col in dataframe.iloc[:, 37:40+1]:
     #     mapped_df = pd.concat([mapped_df, dataframe[col].rename(dataframe[col].name[1])], axis =1)
+    ##Se agregan las calificaciones cuantitativas
     mapped_df = pd.concat([mapped_df, dataframe['Atención brindada']], axis =1)
     mapped_df = pd.concat([mapped_df, dataframe['Profesionalismo']], axis =1)
     mapped_df = pd.concat([mapped_df, dataframe['Tiempo de entrega']], axis =1)
     mapped_df = pd.concat([mapped_df, dataframe['Calidad del producto']], axis =1)
+    ##Se agregan las columnas de opiniones
     for col in dataframe.iloc[:, 42:43+1]:
         mapped_df = pd.concat([mapped_df, dataframe[col].rename(dataframe[col].name[1])], axis =1)
     mapped_df = pd.concat([mapped_df, dataframe.iloc[: , 44].rename("Comentarios")], axis =1)
