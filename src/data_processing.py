@@ -40,6 +40,7 @@ def mappear_df(dataframe):
     mapped_df = pd.DataFrame()
     mapped_df = pd.concat([mapped_df, dataframe['Fecha']], axis =1)
     mapped_df = pd.concat([mapped_df, dataframe.iloc[:, 10].rename("Nombre de la Compañía")], axis =1)
+    mapped_df = pd.concat([mapped_df, dataframe.iloc[:, 14].rename("servicio")], axis =1)
     ##Esto es para agregar a los colaboradores
     for col in dataframe.iloc[:, 16 : 35+1]:
         mapped_df = pd.concat([mapped_df, dataframe[col].rename(dataframe[col].name[1])], axis =1)
@@ -53,7 +54,7 @@ def mappear_df(dataframe):
     mapped_df = pd.concat([mapped_df, dataframe['Calidad del producto']], axis =1)
     ##Se agregan las columnas de opiniones
     for col in dataframe.iloc[:, 42:43+1]:
-        mapped_df = pd.concat([mapped_df, dataframe[col].rename(dataframe[col].name[1])], axis =1)
+        mapped_df = pd.concat([mapped_df, dataframe[col].rename(dataframe[col].name[0])], axis =1)
     mapped_df = pd.concat([mapped_df, dataframe.iloc[: , 44].rename("Comentarios")], axis =1)
 
     return mapped_df
@@ -79,6 +80,7 @@ df = limpiar_dataframe(df)
 df_mappeada = mappear_df(df)
 
 
+
 ##VISORES
 
 #print(df.iloc[:, 3])
@@ -87,3 +89,4 @@ df_mappeada = mappear_df(df)
 #print(df.xs('Ana Aguirre', axis=1, level=1))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
 #print(colaboradores)
+##print(df_mappeada.columns)

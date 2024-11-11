@@ -29,10 +29,15 @@ df['Profesionalismo'] = df['profesionalismo_servicio'].map(map_dict)
 df['Tiempo de Entrega'] = df["velocidad_servicio"].map(map_dict)
 df['Calidad del Producto'] = df["calidad_servicio"].map(map_dict)
 
+
+
+##Diccionario de colores para las diferentes gráficas
 marker_colors_servicios = {
-    'servicio 1': "#0700de",
-    'servicio 2': "#0085de",
-    'servicio 3': "##00cbde",
+    'servicio 1': "#1E3A5F",  # Azul oscuro
+    'servicio 2': "#4B78A3",  # Azul medio
+    'servicio 3': "#7FA5D0",  # Azul claro
+    'servicio 4': "#9B4D98",  # Morado suave
+    'servicio 5': "#A3B8D8",  # Azul claro grisáceo
 }
 
 # marker_colors_calificaciones = {
@@ -46,12 +51,14 @@ marker_colors_servicios = {
 
 
 marker_colors_calificaciones = {
-    0 : "#ff0000",
-    1 : "#ff8000",
-    2 : "#ffbf00",
-    3 : "#80ff00",
-    4 : "#00ff00",
-    5 : "#00ff80",
+    0: "#D0E2F2",  # Azul muy claro
+    1: "#7FA5D0",  # Azul claro
+    3: "#A3B8D8",  # Azul grisáceo
+    5: "#4B78A3",  # Azul medio
+    6: "#9B4D98",  # Morado suave
+    8: "#1E3A5F",  # Azul oscuro
+    9: "#5A2A8C",  # Azul oscuro con matiz morado
+    10: "#274466"   # Azul marino
 }
 
 
@@ -59,6 +66,7 @@ fig = make_subplots(rows=1, cols=2, specs=[[{"type": "bar"}, {"type": "pie"}]])
 
 promedios = df.mean(numeric_only=True)
 
+##Se agrega la barra de promedios. Esta sirve como base para las barras stackeadas
 for col_name in df.columns[5:8+1]:
 
     promedio = df[col_name].mean()
@@ -73,17 +81,20 @@ for col_name in df.columns[5:8+1]:
         textposition = 'outside',
         hoverinfo = 'none',
         showlegend=False,
-        width = 0.1,
+        width = 0.1, ##Truco para que funcione el hover de las barras apiladas
         opacity = 0.85,
     ), row=1, col=1)
-    
+
+##Se generan las categorias existentes para la leyenda    
 categorias_mostradas = set()
 
+##Se calculan las barras stackeadas; se settea la base como 0 para que se vayan sumando las barras
 for col_name in df.columns[5:8+1]:
     cal_counts = df[col_name].value_counts().sort_index()
     cal_lista = cal_counts.index.to_list()
     base = 0 
 
+##Se genera una etiqueta cualitativa para las calificaciones y se calcula la altura de la barras. Se agregan las categorias al set de la leyenda
     for cal, count in cal_counts.items():
         percent =(count/len(df))*100
         altura_barra = (percent/100)*promedios[col_name]
@@ -91,6 +102,7 @@ for col_name in df.columns[5:8+1]:
         showlegend = False if cal in categorias_mostradas else True
         categorias_mostradas.add(cal)  
 
+##Se agregan las barras stackeadas
         fig.add_trace(go.Bar(
             x = [altura_barra],
             y = [col_name],
@@ -106,15 +118,18 @@ for col_name in df.columns[5:8+1]:
             width = 0.35,
             ), row=1, col=1)
 
-        base += altura_barra
+        base += altura_barra ##Aquí se van sumando las alturas de las barras
 
+##Se mofifican las anotaciones de los ejes
 fig.update_yaxes(title_text="Metricas Aplicadas", row=1, col=1)
 fig.update_xaxes(title_text="Promedio de las Calificaciones", row=1, col=1)
 
+##Se agregan subtítulos a los gráficos. Esto es un mess.
 fig.add_annotation(
     x = 0.1, y = -0.1, xref =  'paper', yref = 'paper', text = "Evaluación de los servicios brindados",
     showarrow=False, font=dict(size=16, color="black"))
 
+##Se agrega la gráfica de dona para los servicios
 fig.add_trace(go.Pie(
     labels = df['servicio'].value_counts().index,
     values = df['servicio'].value_counts().values,
@@ -127,13 +142,16 @@ fig.add_trace(go.Pie(
     row=1, col=2
     )
 
+##Se agregan subtítulos a los gráficos. Esto es un mess.
 fig.add_annotation(
     x = 0.85, y = -0.1 , xref = 'paper', yref = 'paper', text = "Distribución de los servicios brindados",
     showarrow=False, font=dict(size=16, color="black"))
 
+##Ajuste de tamaño de la gráfica de dona
 fig.update_traces(textfont_size=12, marker=dict(line=dict(color='white', width=1)),
     domain=dict(x=[0.55, 0.95], y=[0.1, 0.9]), row=1, col=2)
 
+##Se agregan las leyendas y se stackean las barras
 fig.update_layout(
     title_text="Evaluación de desempeño de los colaboradores",
     title_x = 0,
