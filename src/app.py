@@ -8,6 +8,8 @@ import plotly.express as px
 
 app = Flask(__name__)
 
+
+
 # Ruta principal para cargar el formulario
 @app.route('/')
 def upload_form():
