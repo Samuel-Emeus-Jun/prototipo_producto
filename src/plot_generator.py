@@ -30,6 +30,7 @@ df['Tiempo de Entrega'] = df["velocidad_servicio"].map(map_dict)
 df['Calidad del Producto'] = df["calidad_servicio"].map(map_dict)
 
 
+##AQUI EMPIEZA EVALUACIONES()
 
 ##Diccionario de colores para las diferentes gráficas
 marker_colors_servicios = {
