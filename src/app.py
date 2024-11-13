@@ -73,6 +73,7 @@ def upload_file():
 # Ruta para el Reporte General
 @app.route('/general')
 def reporte_general():
+    ##print(evaluaciones)
     return render_template('reporte_general.html')
 
 # Ruta para el Reporte Anual
