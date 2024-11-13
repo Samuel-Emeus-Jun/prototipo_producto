@@ -134,7 +134,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
 
     ##Se agregan subtítulos a los gráficos. Esto es un mess.
     fig.add_annotation(
-        x = 0.1, y = -0.1, xref =  'paper', yref = 'paper', text = "Evaluación de los servicios brindados",
+        x = 0.15, y = -0.1, xref =  'paper', yref = 'paper', text = "Evaluación de los servicios brindados",
         showarrow=False, font=dict(size=16, color="black"))
 
     ##Se agrega la gráfica de dona para los servicios
@@ -184,3 +184,87 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     ##fig.show()
     ##fig.write_image(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.png")
     evaluaciones[tipo_de_reporte].append(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.png")
+
+
+def generar_donas(dataframe, tipo_de_reporte):
+    """Esta función genera una gráfica de pastel para conocer la aceptación de los clientes respecto a los servicios brindados.
+    Se utiliza plotly para generar la gráfica que contienen dos subplots, cada uno haciendo referencia a las preguntas 
+    '¿Contratarías nuevamente nuestros servicios?'y '¿Recomendarías nuestros servicios?'."""	
+
+    df = dataframe
+
+    pastel_colors = {
+        'Sí': "#4B78A3",  # Azul
+        'No': "#6A2C4E"   # Burgundy
+    }
+
+    fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "pie"}]])
+
+    fig.add_trace(go.Pie(
+        labels = df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index,
+        values = df['¿Contratarías nuevamente nuestros servicios?'].value_counts().values,
+        name = "Contrataría Nuevamente",
+        hole = 0.7,
+        textinfo = "percent+label",
+        textposition = "inside",
+        showlegend= False,
+        marker_colors = [pastel_colors[respuesta] for respuesta in df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index]),
+        row=1, col=1
+        )
+
+
+    fig.add_annotation(
+        x = 0.15, y = -0.1 , xref = 'paper', yref = 'paper', text = "Contratarían nuevamente nuestros servicios",
+        showarrow=False, font=dict(size=16, color="black"))
+    
+    fig.update_traces(textfont_size=12, marker=dict(line=dict(color='white', width=1)),
+        domain=dict(x=[0.1, 0.45], y=[0.1, 0.9]), row=1, col=1)
+        
+    
+    fig.add_trace(go.Pie(
+        labels = df['¿Recomendarías nuestros servicios?'].value_counts().index,
+        values = df['¿Recomendarías nuestros servicios?'].value_counts().values,
+        name = "Recomendaría Nuestros Servicios",
+        hole = 0.7,
+        textinfo = "percent+label",
+        textposition = "inside",
+        showlegend= True,
+        marker_colors = [pastel_colors[respuesta] for respuesta in df['¿Recomendarías nuestros servicios?'].value_counts().index]),
+        row=1, col=2
+        )
+    
+    fig.update_traces(textfont_size=12, marker=dict(line=dict(color='white', width=1)),
+        domain=dict(x=[0.1, 0.45], y=[0.1, 0.9]), row=1, col=2)
+    
+    fig.add_annotation(
+        x = 0.85, y = -0.1 , xref = 'paper', yref = 'paper', text = "Recomendaría nuestros servicios",
+        showarrow=False, font=dict(size=16, color="black"))
+    
+    fig.update_layout(
+        title_text = f"Percepción {tipo_de_reporte} de nuestros clientes",
+        title_x = 0,
+        title_font = dict(size=24),
+        legend=dict(
+            title="Respuestas",
+            orientation="v",
+            yanchor="top",
+            y=0.8,
+            xanchor="left",
+            x=0.47,
+            bgcolor="rgba(255, 255, 255, 0.5)"
+        )
+    )
+    
+    fig.show()
+
+
+def main():
+    from data_processing import limpiar_dataframe, mappear_df
+    df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
+    df = limpiar_dataframe(df)
+    df_mappeada = mappear_df(df)
+    
+    generar_donas(df_mappeada, "general")
+
+if __name__ == '__main__':
+    main()
