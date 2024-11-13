@@ -192,7 +192,7 @@ def generar_donas(dataframe, tipo_de_reporte):
     '¿Contratarías nuevamente nuestros servicios?'y '¿Recomendarías nuestros servicios?'."""	
 
     df = dataframe
-
+    global donas
     pastel_colors = {
         'Sí': "#4B78A3",  # Azul
         'No': "#6A2C4E"   # Burgundy
