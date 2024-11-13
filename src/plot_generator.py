@@ -182,8 +182,8 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     )
 
     ##fig.show()
-    ##fig.write_image(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.png")
-    evaluaciones[tipo_de_reporte].append(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.png")
+    ##fig.write_html(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")
+    evaluaciones[tipo_de_reporte].append(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")
 
 
 def generar_donas(dataframe, tipo_de_reporte):
@@ -255,7 +255,9 @@ def generar_donas(dataframe, tipo_de_reporte):
         )
     )
     
-    fig.show()
+    ##fig.show()
+    ##fig.write_html(f"static/{tipo_de_reporte}/donas_{tipo_de_reporte}.html")
+    donas[tipo_de_reporte].append(f"static/{tipo_de_reporte}/donas_{tipo_de_reporte}.html")
 
 
 def main():
