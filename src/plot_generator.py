@@ -30,14 +30,14 @@ import plotly.express as px
 # df['Calidad del Producto'] = df["calidad_servicio"].map(map_dict)
 
 ##AQUÍ VA A EMPEZAR LA FUNCIÓN 
-def evaluacion_desempeno(dataframe):
+def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     """Esta función genera un reporte de desempeño para un colaborador en específico iterando a través de una lista 
     generada en utils.py. Se generan dos gráficas: una de barras stackeadas para las calificaciones y una de dona para
     los servicios brindados. Se utiliza plotly para generar las gráficas.
     Se debe inyectar una data base en formato de dataframe de pandas, el nombre del colaborador y el tipo de reporte."""	 
         
     df = dataframe
-
+    map_dict = {0: "Pésimo" , 1: "Malo", 2: "Regular", 3: "Bueno", 4: "Muy Bueno", 5: "Excelente"}
     ##Diccionario de colores para las diferentes gráficas
     marker_colors_servicios = {
         'servicio 1': "#1E3A5F",  # Azul oscuro
