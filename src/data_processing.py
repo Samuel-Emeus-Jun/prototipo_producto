@@ -14,7 +14,7 @@ def limpiar_dataframe(dataframe):
     df = df.dropna(subset=df.columns[37:40+1])
     df = df.dropna(subset=df.columns[42:43+1])
     #Convierte la columna de fechas a formato que todos podamos leer
-    df['Fecha'] = pd.to_datetime(df.iloc[:, 3], format = 'mixed').dt.strftime('%d-%m-%Y')
+    df['Fecha'] = pd.to_datetime(df.iloc[:, 3], format = 'mixed')##.dt.strftime('%d-%m-%Y')
     ##Ordenar los valores de la columna 'Otro (especifique)' en los colaboradores correspondientes
     otros_idx = 36 ##df.columns.get_loc(('Unnamed: 36_level_0', 'Otro (especifique)'))
     subheaders = df.columns.levels[1]

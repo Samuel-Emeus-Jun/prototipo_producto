@@ -35,7 +35,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     generada en utils.py. Se generan dos gráficas: una de barras stackeadas para las calificaciones y una de dona para
     los servicios brindados. Se utiliza plotly para generar las gráficas.
     Se debe inyectar una data base en formato de dataframe de pandas, el nombre del colaborador y el tipo de reporte."""	 
-        
+    global barras    
     df = dataframe
     map_dict = {0: "Pésimo" , 1: "Malo", 2: "Regular", 3: "Bueno", 4: "Muy Bueno", 5: "Excelente"}
     ##Diccionario de colores para las diferentes gráficas
@@ -181,4 +181,6 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
         hovermode = 'closest'
     )
 
-    fig.show()
+    ##fig.show()
+    ##fig.write_image(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.png")
+    barras[tipo_de_reporte].append(fig)
