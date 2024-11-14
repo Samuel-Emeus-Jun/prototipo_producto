@@ -1,6 +1,7 @@
 ##LAS FUNCIONES PEQUEÑAS 
 ##VAN AQUÍ 
 import pandas as pd
+from pathlib import Path
 #Mostrar los encabezados con su índice. Es una función de guía para el desarrollo de este proyecto.
 def encabezados_con_indice(df):
     return [(index, col) for index, col in enumerate(df.columns)]
@@ -13,8 +14,18 @@ def encabezados_sin_indice(df):
 def generar_lista_de_colaboradores(df):
     return df.columns.get_level_values(1)[16:35+1].to_list()
 
+##Obtiene una lista de los servicios brindados por la empresa. Esta lista se debe agrega manualmente a las funciones plot.
 def generar_lista_de_servicios(df):
     return df.iloc[:, 14].value_counts().index.to_list()
+
+
+##Función para limpiar la carpeta  'static' de archivos .html
+def cleanup_static():
+    """Limpia todos los archivos .html en el directorio static, incluyendo subcarpetas."""
+    for file_path in Path('static').rglob('*.html'):
+        file_path.unlink()  # Elimina el archivo .html
+    print("Archivos eliminados")  # Mensaje opcional para confirmar
+
 
 def main():
     from data_processing import limpiar_dataframe, mappear_df
