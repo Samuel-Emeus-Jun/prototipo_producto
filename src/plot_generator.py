@@ -10,6 +10,7 @@ import plotly.express as px
 
 # data = {
 #     "servicio": ["servicio 1", "servicio 1", "servicio 3", "servicio 1", "servicio 2", "servicio 1", "servicio 3", "servicio 1", "servicio 2", "servicio 1", "servicio 3", "servicio 1"],
+#     "aceptacion": ["si", "si", "si", "no", "si", "no", "si", "si", "si", "no", "si", "no"],
 #     "colaborador_1": ["n/a", "n/a", "colaborador_1", "n/a", "colaborador_1", "n/a", "n/a", "n/a", "n/a", "colaborador_1", "n/a", "n/a",],
 #     "colaborador_2": ["n/a", "colaborador_2", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a",],
 #     "colaborador_3": ["colaborador_3", "n/a", "colaborador_3", "n/a", "colaborador_3", "n/a", "n/a", "n/a", "colaborador_3", "n/a", "n/a", "n/a"],
@@ -29,12 +30,58 @@ import plotly.express as px
 # df['Tiempo de Entrega'] = df["velocidad_servicio"].map(map_dict)
 # df['Calidad del Producto'] = df["calidad_servicio"].map(map_dict)
 
+# df = pd.DataFrame(data)
+
+# # Contamos las ocurrencias para cada combinación de 'aceptacion' y 'servicio'
+# counts = df.groupby(["aceptacion", "servicio"]).size().reset_index(name="counts")
+
+# # Definimos listas dinámicamente
+# labels = ["Aceptación"]
+# parents = [""]
+# values = [len(df)]  # Total de respuestas
+
+# # Añadimos el total de "Sí" como un solo nodo
+# labels.append("Sí")
+# parents.append("Aceptación")
+# values.append(counts[counts["aceptacion"] == "si"]["counts"].sum())  # Total de "Sí"
+
+# # Añadimos el nodo de "No" y sus detalles por servicio
+# labels.append("No")
+# parents.append("Aceptación")
+# values.append(counts[counts["aceptacion"] == "no"]["counts"].sum())  # Total de "No"
+
+# for servicio in counts[counts["aceptacion"] == "no"]["servicio"]:
+#     labels.append(f"{servicio} (No)")
+#     parents.append("No")
+#     count_value = counts[(counts["aceptacion"] == "no") & (counts["servicio"] == servicio)]["counts"].values[0]
+#     values.append(count_value)
+
+# # Creamos el gráfico Sunburst
+# fig = go.Figure(go.Sunburst(
+#     labels=labels,
+#     parents=parents,
+#     values=values,
+#     branchvalues="total"
+# ))
+
+# # Personalización del gráfico
+# fig.update_layout(
+#     title="Distribución de aceptación con desglose en 'No'",
+#     margin=dict(t=40, l=0, r=0, b=0)
+# )
+
+# # Mostramos el gráfico
+# fig.show()
+
+
+
 ##AQUÍ VA A EMPEZAR LA FUNCIÓN 
 def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     """Esta función genera un reporte de desempeño para un colaborador en específico iterando a través de una lista 
     generada en utils.py. Se generan dos gráficas: una de barras stackeadas para las calificaciones y una de dona para
     los servicios brindados. Se utiliza plotly para generar las gráficas.
     Se debe inyectar una data base en formato de dataframe de pandas, el nombre del colaborador y el tipo de reporte."""	 
+    
     global evaluaciones    
     df = dataframe
     map_dict = {0: "Pésimo" , 1: "Malo", 2: "Regular", 3: "Bueno", 4: "Muy Bueno", 5: "Excelente"}
@@ -183,7 +230,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
 
     ##fig.show()
     ##fig.write_html(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    evaluaciones[tipo_de_reporte].append(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")
+    evaluaciones[tipo_de_reporte].append(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")##REVISAR SUBCARPETAS
 
 
 def generar_donas(dataframe, tipo_de_reporte):
@@ -201,41 +248,38 @@ def generar_donas(dataframe, tipo_de_reporte):
     fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "pie"}]])
 
     fig.add_trace(go.Pie(
-        labels = df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index,
-        values = df['¿Contratarías nuevamente nuestros servicios?'].value_counts().values,
-        name = "Contrataría Nuevamente",
-        hole = 0.7,
-        textinfo = "percent+label",
-        textposition = "inside",
-        showlegend= False,
-        marker_colors = [pastel_colors[respuesta] for respuesta in df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index]),
-        row=1, col=1
-        )
+        labels=df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index,
+        values=df['¿Contratarías nuevamente nuestros servicios?'].value_counts().values,
+        name="Contrataría Nuevamente",
+        hole=0.7,
+        textinfo="percent+label",
+        textposition="inside",
+        showlegend=False,
+        marker=dict(colors=[pastel_colors[respuesta] for respuesta in df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index],
+                    line=dict(color='white', width=1)),
+        textfont_size=12,
+        domain=dict(x=[0.0, 0.45], y=[0.1, 0.9])  # Control the size and position of the first pie chart
+    ), row=1, col=1)
 
 
     fig.add_annotation(
         x = 0.15, y = -0.1 , xref = 'paper', yref = 'paper', text = "Contratarían nuevamente nuestros servicios",
         showarrow=False, font=dict(size=16, color="black"))
     
-    fig.update_traces(textfont_size=12, marker=dict(line=dict(color='white', width=1)),
-        domain=dict(x=[0.1, 0.45], y=[0.1, 0.9]), row=1, col=1)
-        
-    
     fig.add_trace(go.Pie(
-        labels = df['¿Recomendarías nuestros servicios?'].value_counts().index,
-        values = df['¿Recomendarías nuestros servicios?'].value_counts().values,
-        name = "Recomendaría Nuestros Servicios",
-        hole = 0.7,
-        textinfo = "percent+label",
-        textposition = "inside",
-        showlegend= True,
-        marker_colors = [pastel_colors[respuesta] for respuesta in df['¿Recomendarías nuestros servicios?'].value_counts().index]),
-        row=1, col=2
-        )
-    
-    fig.update_traces(textfont_size=12, marker=dict(line=dict(color='white', width=1)),
-        domain=dict(x=[0.1, 0.45], y=[0.1, 0.9]), row=1, col=2)
-    
+        labels=df['¿Recomendarías nuestros servicios?'].value_counts().index,
+        values=df['¿Recomendarías nuestros servicios?'].value_counts().values,
+        name="Recomendaría Nuestros Servicios",
+        hole=0.7,
+        textinfo="percent+label",
+        textposition="inside",
+        showlegend=True,
+        marker=dict(colors=[pastel_colors[respuesta] for respuesta in df['¿Recomendarías nuestros servicios?'].value_counts().index],
+                    line=dict(color='white', width=1)),
+        textfont_size=12,
+        domain=dict(x=[0.55, 1.0], y=[0.1, 0.9])  # Control the size and position of the second pie chart
+    ), row=1, col=2)
+        
     fig.add_annotation(
         x = 0.85, y = -0.1 , xref = 'paper', yref = 'paper', text = "Recomendaría nuestros servicios",
         showarrow=False, font=dict(size=16, color="black"))
@@ -254,19 +298,22 @@ def generar_donas(dataframe, tipo_de_reporte):
             bgcolor="rgba(255, 255, 255, 0.5)"
         )
     )
-    
-    ##fig.show()
-    ##fig.write_html(f"static/{tipo_de_reporte}/donas_{tipo_de_reporte}.html")
-    donas[tipo_de_reporte].append(f"static/{tipo_de_reporte}/donas_{tipo_de_reporte}.html")
+    fig.show()
+    ##fig.write_html(f"static/donas/dona_{tipo_de_reporte}.html")
+    donas.append(f"/donas/dona_{tipo_de_reporte}.html")
 
+donas = []
+barras = []
+evaluaciones = {"general": [], "anual": [], "trimestral": []}
 
 def main():
     from data_processing import limpiar_dataframe, mappear_df
     df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
     df = limpiar_dataframe(df)
     df_mappeada = mappear_df(df)
-    
+        
     generar_donas(df_mappeada, "general")
+    print(donas)
 
 if __name__ == '__main__':
     main()
