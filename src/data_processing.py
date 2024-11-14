@@ -61,7 +61,6 @@ def mappear_df(dataframe):
 
     return mapped_df
 
-
 ##FIltrar df obtenido de limpiar_df a 12 meses   
 def filtro_12_meses(df_general): 
     #Establecer la fecha límite para filtrar los datos
@@ -71,6 +70,7 @@ def filtro_12_meses(df_general):
     #Imprimir las últimas 5 columnas del DataFrame *Pura vista, no va a estar en el código final*
     print(df_last_12_moths.iloc[:, -5:])
     return df_last_12_moths
+
 
 ##Filtrar df obtenido de limpiar_df a 3 meses
 def filtro_3_meses(df_general):
@@ -89,7 +89,9 @@ print(mappear_df(df))
 filtro_12_meses(mappear_df(df))
 filtro_3_meses(mappear_df(df))
 
-#Imprimir las últimas 5 columnas del dataframe para corroborar la correcta inserción de los datos generados
+df = limpiar_dataframe(df)
+df_mappeada = mappear_df(df)
+
 
 
 ##VISORES
@@ -102,3 +104,4 @@ filtro_3_meses(mappear_df(df))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
 #print(colaboradores)
 #print(tabulate(df, tablefmt='psql'))
+
