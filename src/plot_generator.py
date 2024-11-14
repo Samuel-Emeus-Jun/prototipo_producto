@@ -222,7 +222,8 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
         legend_traceorder = 'normal',
         barmode='stack',
         showlegend=True,
-        hovermode = 'closest'
+        hovermode = 'closest',
+        autosize=True,
     )
 
     ##fig.show()
@@ -293,7 +294,8 @@ def generar_donas(dataframe, tipo_de_reporte):
             xanchor="left",
             x=0.47,
             bgcolor="rgba(255, 255, 255, 0.5)"
-        )
+        ),
+        autosize=True,
     )
     fig.show()
     ##fig.write_html(f"static/donas/dona_{tipo_de_reporte}.html")
