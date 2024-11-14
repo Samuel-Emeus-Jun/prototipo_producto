@@ -87,11 +87,11 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     map_dict = {0: "Pésimo" , 1: "Malo", 2: "Regular", 3: "Bueno", 4: "Muy Bueno", 5: "Excelente"}
     ##Diccionario de colores para las diferentes gráficas
     marker_colors_servicios = {
-        'servicio 1': "#1E3A5F",  # Azul oscuro
-        'servicio 2': "#4B78A3",  # Azul medio
-        'servicio 3': "#7FA5D0",  # Azul claro
-        'servicio 4': "#9B4D98",  # Morado suave
-        'servicio 5': "#A3B8D8",  # Azul claro grisáceo
+        'Encuesta de Mercado Laboral, Salarios, Estadísticos y Análisis de Mercado': "#1E3A5F",  # Azul oscuro
+        'Asesoría Legal': "#4B78A3",  # Azul medio
+        'PAD Ponte al Día': "#7FA5D0",  # Azul claro
+        'Desarrollo Organizacional': "#9B4D98",  # Morado suave
+        'Otro (especifique)': "#A3B8D8",  # Azul claro grisáceo
     }
 
     # marker_colors_calificaciones = {
@@ -146,7 +146,6 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     ##Se calculan las barras stackeadas; se settea la base como 0 para que se vayan sumando las barras
     for col_name in columnas_iteradas:
         cal_counts = df[col_name].value_counts().sort_index()
-        cal_lista = cal_counts.index.to_list()
         base = 0 
 
     ##Se genera una etiqueta cualitativa para las calificaciones y se calcula la altura de la barras. Se agregan las categorias al set de la leyenda
@@ -186,25 +185,23 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
 
     ##Se agrega la gráfica de dona para los servicios
     fig.add_trace(go.Pie(
-        labels = df['servicio'].value_counts().index,
-        values = df['servicio'].value_counts().values,
-        name = "Servicio Brindado",
-        hole = 0.7,
-        textinfo = "percent+label",
-        textposition = "inside",
-        showlegend= False,
-        marker_colors = [marker_colors_servicios[servicio] for servicio in df['servicio'].value_counts().index]),
-        row=1, col=2
-        )
+        labels=df['servicio'].value_counts().index,
+        values=df['servicio'].value_counts().values,
+        name="Servicio Brindado",
+        hole=0.7,
+        textinfo="percent+label",
+        textposition="inside",
+        showlegend=False,
+        marker=dict(colors=[marker_colors_servicios[servicio] for servicio in df['servicio'].value_counts().index],
+                    line=dict(color='white', width=1)),
+        textfont_size=12,
+        domain=dict(x=[0.55, 0.95], y=[0.1, 0.9])  # Control the size and position of the pie chart
+    ), row=1, col=2)
 
     ##Se agregan subtítulos a los gráficos. Esto es un mess.
     fig.add_annotation(
         x = 0.85, y = -0.1 , xref = 'paper', yref = 'paper', text = "Distribución de los servicios brindados",
         showarrow=False, font=dict(size=16, color="black"))
-
-    ##Ajuste de tamaño de la gráfica de dona
-    fig.update_traces(textfont_size=12, marker=dict(line=dict(color='white', width=1)),
-        domain=dict(x=[0.55, 0.95], y=[0.1, 0.9]), row=1, col=2)
 
     ##Se agregan las leyendas y se stackean las barras
     fig.update_layout(
@@ -229,8 +226,8 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     )
 
     ##fig.show()
-    ##fig.write_html(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    evaluaciones[tipo_de_reporte].append(f"static/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")##REVISAR SUBCARPETAS
+    ##fig.write_html(f"static/evaluaciones/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")
+    evaluaciones[tipo_de_reporte].append(f"evaluaciones/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")##REVISAR SUBCARPETAS
 
 
 def generar_donas(dataframe, tipo_de_reporte):
@@ -308,12 +305,24 @@ evaluaciones = {"general": [], "anual": [], "trimestral": []}
 
 def main():
     from data_processing import limpiar_dataframe, mappear_df
+    from utils import generar_lista_de_colaboradores
     df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
     df = limpiar_dataframe(df)
+    colaboradores = generar_lista_de_colaboradores(df)
     df_mappeada = mappear_df(df)
-        
-    generar_donas(df_mappeada, "general")
-    print(donas)
+
+    servicios_minimos = 5
+    tipo_de_reporte = "general"
+
+    for colaborador in colaboradores:
+            temp_df = df_mappeada[df_mappeada[colaborador] == colaborador]
+            if len(temp_df) >= servicios_minimos:
+                evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte)
+
+    print(evaluaciones)    
+    print(len(evaluaciones["general"]))
+#    generar_donas(df_mappeada, "general")
+#   print(donas)
 
 if __name__ == '__main__':
     main()
