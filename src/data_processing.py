@@ -1,6 +1,8 @@
 ##AQUÍ VAMOS A INSERTAR LAS FUNCIONES 
 ##DE PROCESAMIENTO DE DATOS
 import pandas as pd
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 ##TIMEDATE Completo 
 
@@ -59,22 +61,33 @@ def mappear_df(dataframe):
 
     return mapped_df
 
-
-
-##FIltrar df obtenido de limpiar_df a 12 meses    
-def filtro_12_meses(): 
-    return 0
+##FIltrar df obtenido de limpiar_df a 12 meses   
+def filtro_12_meses(df_general): 
+    #Establecer la fecha límite para filtrar los datos
+    fecha_limite = datetime.now() - relativedelta(months=12)
+    #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
+    df_last_12_moths=df_general[df_general['Fecha'] > fecha_limite]
+    #Imprimir las últimas 5 columnas del DataFrame *Pura vista, no va a estar en el código final*
+    print(df_last_12_moths.iloc[:, -5:])
+    return df_last_12_moths
 
 
 ##Filtrar df obtenido de limpiar_df a 3 meses
-def filtro_3_meses():
-    return 0
-
-
+def filtro_3_meses(df_general):
+    #Establecer la fecha límite para filtrar los datos
+    fecha_limite = datetime.now() - relativedelta(months=3)
+    #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
+    df_last_3_months=df_general[df_general['Fecha'] > fecha_limite]
+    #Imprimir las últimas 5 columnas del DataFrame *Pura vista, no va a estar en el código final*
+    print(df_last_3_months.iloc[:, -5:])
+    return df_last_3_months
 
 df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
+df=limpiar_dataframe(df)
 
-
+print(mappear_df(df))
+filtro_12_meses(mappear_df(df))
+filtro_3_meses(mappear_df(df))
 
 df = limpiar_dataframe(df)
 df_mappeada = mappear_df(df)
@@ -86,7 +99,9 @@ df_mappeada = mappear_df(df)
 #print(df.iloc[:, 3])
 #print(df.iloc[:, 16].to_list())
 #print(df['Fecha'])
+
 #print(df.xs('Ana Aguirre', axis=1, level=1))
 #print(df['Unnamed: 36_level_0']['Otro (especifique)'])
 #print(colaboradores)
-##print(df_mappeada.columns)
+#print(tabulate(df, tablefmt='psql'))
+
