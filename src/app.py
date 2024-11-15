@@ -10,9 +10,10 @@ from utils import generar_lista_de_colaboradores
 
 app = Flask(__name__)
 
-barras = []
-donas = []
-evaluaciones = {"general": [], "anual": [], "trimestral": []}
+barras = {}
+donas = {}
+evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
+texto = []
 
 colaboradores = None
 df_global = None

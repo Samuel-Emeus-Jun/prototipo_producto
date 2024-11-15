@@ -298,12 +298,13 @@ def generar_donas(dataframe, tipo_de_reporte):
         autosize=True,
     )
     fig.show()
-    fig.write_html(f"src/static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
-    evaluaciones[tipo_de_reporte].append(f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")##REVISAR SUBCARPETAS
+    fig.write_html(f"static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
+    donas[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
 
-donas = []
-barras = []
-evaluaciones = {"general": [], "anual": [], "trimestral": []}
+barras = {}
+donas = {}
+evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
+texto = []
 
 def main():
     from data_processing import limpiar_dataframe, mappear_df
@@ -324,7 +325,7 @@ def main():
     # print(evaluaciones)    
     # print(len(evaluaciones["general"]))
     generar_donas(df_mappeada, "general")
-    print(donas) 
+    print(donas[tipo_de_reporte]) 
 
 if __name__ == '__main__':
     main()
