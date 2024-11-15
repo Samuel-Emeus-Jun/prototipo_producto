@@ -227,8 +227,8 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     )
 
     ##fig.show()
-    ##fig.write_html(f"static/evaluaciones/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    evaluaciones[tipo_de_reporte].append(f"evaluaciones/{tipo_de_reporte}/evaluacion_{tipo_de_reporte}_{colaborador}.html")##REVISAR SUBCARPETAS
+    fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
+    evaluaciones[tipo_de_reporte].append(f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")##REVISAR SUBCARPETAS
 
 
 def generar_donas(dataframe, tipo_de_reporte):
@@ -298,8 +298,8 @@ def generar_donas(dataframe, tipo_de_reporte):
         autosize=True,
     )
     fig.show()
-    ##fig.write_html(f"static/donas/dona_{tipo_de_reporte}.html")
-    donas.append(f"/donas/dona_{tipo_de_reporte}.html")
+    fig.write_html(f"src/static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
+    evaluaciones[tipo_de_reporte].append(f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")##REVISAR SUBCARPETAS
 
 donas = []
 barras = []
@@ -316,15 +316,15 @@ def main():
     servicios_minimos = 5
     tipo_de_reporte = "general"
 
-    for colaborador in colaboradores:
-            temp_df = df_mappeada[df_mappeada[colaborador] == colaborador]
-            if len(temp_df) >= servicios_minimos:
-                evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte)
+    # for colaborador in colaboradores:
+    #         temp_df = df_mappeada[df_mappeada[colaborador] == colaborador]
+    #         if len(temp_df) >= servicios_minimos:
+    #             evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte)
 
-    print(evaluaciones)    
-    print(len(evaluaciones["general"]))
-#    generar_donas(df_mappeada, "general")
-#   print(donas)
+    # print(evaluaciones)    
+    # print(len(evaluaciones["general"]))
+    generar_donas(df_mappeada, "general")
+    print(donas) 
 
 if __name__ == '__main__':
     main()

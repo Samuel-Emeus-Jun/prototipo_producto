@@ -72,12 +72,12 @@ def filtro_3_meses():
 
 
 
-df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
+# df = pd.read_csv('data/Satisfacción de servicio para UPG 2024.csv', header = [0,1])
 
 
 
-df = limpiar_dataframe(df)
-df_mappeada = mappear_df(df)
+# df = limpiar_dataframe(df)
+# df_mappeada = mappear_df(df)
 
 
 
