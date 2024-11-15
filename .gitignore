@@ -1,4 +1,2 @@
-static/anual/*html
-static/general/*html
-static/trimestral/*html
+static/**/*.html
 data/*.csv
