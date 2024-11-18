@@ -216,9 +216,9 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
         autosize=True,
     )
 
-    fig.show()
-    #fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    #evaluaciones[tipo_de_reporte].append(f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")##REVISAR SUBCARPETAS
+    #fig.show()
+    fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
+    evaluaciones[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
 
 
 def generar_donas(dataframe, tipo_de_reporte):
@@ -279,9 +279,9 @@ def generar_donas(dataframe, tipo_de_reporte):
         ),
         autosize=True,
     )
-    fig.show()
-    #fig.write_html(f"static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
-    #donas[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
+    #fig.show()
+    fig.write_html(f"static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
+    donas[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
 
 barras = {}
 donas = {}

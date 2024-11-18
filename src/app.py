@@ -8,7 +8,7 @@ from data_processing import limpiar_dataframe, mappear_df
 from plot_generator import evaluacion_desempeño, generar_donas
 from utils import generar_lista_de_colaboradores, cleanup_static
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="../templates")
 
 barras = {}
 donas = {}
@@ -26,8 +26,7 @@ def upload_form():
 # Ruta para procesar el archivo CSV (simulación por ahora)
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    global df_global
-    global colaboradores
+    global df_global, colaboradores, barras, donas, evaluaciones, texto
     # Verificar si hay un archivo en el formulario
     if 'file' not in request.files:
         return 'No se adjuntó ningún archivo'
@@ -45,7 +44,7 @@ def upload_file():
         render_template('cargando.html')
 
         # Leer el archivo CSV directamente en un DataFrame
-        df = pd.read_csv(file)
+        df = pd.read_csv(file, header = [0,1])
         df_limpia = limpiar_dataframe(df)
         colaboradores = generar_lista_de_colaboradores(df_limpia)
         df_global = mappear_df(df_limpia)
@@ -85,7 +84,7 @@ def upload_file():
 @app.route('/general')
 def reporte_general():
     global barras, donas, evaluaciones, texto, colaboradores
-
+    print(donas, evaluaciones)
     
     return render_template('reporte_general.html',
                            tipo_de_reporte="general",

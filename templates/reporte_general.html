@@ -1,10 +1,45 @@
 {% extends "base.html" %}
 
-{% block title %}Reporte General{% endblock %}
+{% block title %}Reporte {{ tipo_de_reporte | capitalize }}{% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Reporte General</h1>
-    <div class="alert alert-info text-center" role="alert">
-        Cargando el reporte general...
-    </div>
+    <h1 class="text-center">Reporte {{ tipo_de_reporte | capitalize }} sobre la evaluación de nuestros clientes</h1>
+
+    <!-- Bloque 1: Gráfica de Barras -->
+    <section>
+        <h2>Nuestros Servicios</h2>
+        <h5>Distribución General de los Servicios Brindados</h5>
+        {# <iframe src="{{ url_for('static', filename=barras[tipo_de_reporte]) }}" width="100%" height="400px"></iframe> #}
+    </section> 
+
+    <!-- Bloque 2: Gráfica de Dona -->
+    <section>
+        <h2>Percepción de los Servicios Brindados</h2>
+        <h5>Distribución de respuestas de satisfacción</h5>
+        <iframe src="{{ url_for('static', filename=donas[tipo_de_reporte]) }}" width="100%" height="400px"></iframe>
+    </section>
+
+    <!-- Bloque 3: Evaluación de Desempeño por Colaborador  -->
+    <section>
+        <h2>Nuestro Equipo</h2>
+        <h5>Análisis detallado por colaborador</h5>
+
+        <div class="row">
+            {% for colaborador, graficas in evaluaciones[tipo_de_reporte].items() %}
+                <div class="col-md-4">
+                    <h3>Evaluación {{ tipo_de_reporte | capitalize }} {{ colaborador | replace("_", " ") }}</h3>
+                    {% for grafica in graficas %}
+                        <iframe src="{{ url_for('static', filename=grafica) }}" width="100%" height="300px"></iframe>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Bloque 4: Texto Generado por IA -->
+    <section>
+        <h2>Lo que opinan Nuestros Clientes</h2>
+        <h5>Comentarios y Observaciones sobre los Servicios Brindados</h5>
+        {# <p>{{ texto_ia }}</p> #}
+    </section>
 {% endblock %}
