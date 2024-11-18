@@ -84,7 +84,8 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     
     global evaluaciones    
     df = dataframe
-    map_dict = {0: "Pésimo" , 1: "Malo", 2: "Regular", 3: "Bueno", 4: "Muy Bueno", 5: "Excelente"}
+    map_dict = {0: "Pésimo", 1: "Muy Malo", 3: "Malo", 5: "Regular - Malo",
+                        6: "Regular - Bueno", 8: "Bueno", 9: "Muy Bueno", 10: "Excelente"}
     ##Diccionario de colores para las diferentes gráficas
     marker_colors_servicios = {
         'Encuesta de Mercado Laboral, Salarios, Estadísticos y Análisis de Mercado': "#1E3A5F",  # Azul oscuro
@@ -115,7 +116,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     }
 
 
-    fig = make_subplots(rows=1, cols=2, specs=[[{"type": "bar"}, {"type": "pie"}]])
+    fig = make_subplots(rows=1, cols=2, specs=[[{"type": "bar"}, {"type": "pie"}]], subplot_titles=("Evaluación de desempeño", "Distribución de servicios brindados"))
 
     promedios = df.mean(numeric_only=True)
 
@@ -173,15 +174,9 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
                 ), row=1, col=1)
 
             base += altura_barra ##Aquí se van sumando las alturas de las barras
-
     ##Se mofifican las anotaciones de los ejes
     fig.update_yaxes(title_text="Metricas Aplicadas", row=1, col=1)
     fig.update_xaxes(title_text="Promedio de las Calificaciones", row=1, col=1)
-
-    ##Se agregan subtítulos a los gráficos. Esto es un mess.
-    fig.add_annotation(
-        x = 0.15, y = -0.1, xref =  'paper', yref = 'paper', text = "Evaluación de los servicios brindados",
-        showarrow=False, font=dict(size=16, color="black"))
 
     ##Se agrega la gráfica de dona para los servicios
     fig.add_trace(go.Pie(
@@ -189,7 +184,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
         values=df['servicio'].value_counts().values,
         name="Servicio Brindado",
         hole=0.7,
-        textinfo="percent+label",
+        textinfo="percent",
         textposition="inside",
         showlegend=False,
         marker=dict(colors=[marker_colors_servicios[servicio] for servicio in df['servicio'].value_counts().index],
@@ -197,11 +192,6 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
         textfont_size=12,
         domain=dict(x=[0.55, 0.95], y=[0.1, 0.9])  # Control the size and position of the pie chart
     ), row=1, col=2)
-
-    ##Se agregan subtítulos a los gráficos. Esto es un mess.
-    fig.add_annotation(
-        x = 0.85, y = -0.1 , xref = 'paper', yref = 'paper', text = "Distribución de los servicios brindados",
-        showarrow=False, font=dict(size=16, color="black"))
 
     ##Se agregan las leyendas y se stackean las barras
     fig.update_layout(
@@ -226,9 +216,9 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
         autosize=True,
     )
 
-    ##fig.show()
-    fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    evaluaciones[tipo_de_reporte].append(f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")##REVISAR SUBCARPETAS
+    fig.show()
+    #fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
+    #evaluaciones[tipo_de_reporte].append(f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")##REVISAR SUBCARPETAS
 
 
 def generar_donas(dataframe, tipo_de_reporte):
@@ -243,7 +233,7 @@ def generar_donas(dataframe, tipo_de_reporte):
         'No': "#6A2C4E"   # Burgundy
     }
 
-    fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "pie"}]])
+    fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "pie"}]], subplot_titles=("Contrataría Nuevamente", "Recomendaría Nuestros Servicios"))
 
     fig.add_trace(go.Pie(
         labels=df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index,
@@ -259,10 +249,6 @@ def generar_donas(dataframe, tipo_de_reporte):
         domain=dict(x=[0.0, 0.45], y=[0.1, 0.9])  # Control the size and position of the first pie chart
     ), row=1, col=1)
 
-
-    fig.add_annotation(
-        x = 0.15, y = -0.1 , xref = 'paper', yref = 'paper', text = "Contratarían nuevamente nuestros servicios",
-        showarrow=False, font=dict(size=16, color="black"))
     
     fig.add_trace(go.Pie(
         labels=df['¿Recomendarías nuestros servicios?'].value_counts().index,
@@ -278,28 +264,24 @@ def generar_donas(dataframe, tipo_de_reporte):
         domain=dict(x=[0.55, 1.0], y=[0.1, 0.9])  # Control the size and position of the second pie chart
     ), row=1, col=2)
         
-    fig.add_annotation(
-        x = 0.85, y = -0.1 , xref = 'paper', yref = 'paper', text = "Recomendaría nuestros servicios",
-        showarrow=False, font=dict(size=16, color="black"))
-    
     fig.update_layout(
         title_text = f"Percepción {tipo_de_reporte} de nuestros clientes",
         title_x = 0,
         title_font = dict(size=24),
         legend=dict(
             title="Respuestas",
-            orientation="v",
+            orientation="h",
             yanchor="top",
-            y=0.8,
-            xanchor="left",
-            x=0.47,
+            y=0.01,
+            xanchor="center",
+            x=0.5,
             bgcolor="rgba(255, 255, 255, 0.5)"
         ),
         autosize=True,
     )
     fig.show()
-    fig.write_html(f"static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
-    donas[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
+    #fig.write_html(f"static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
+    #donas[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
 
 barras = {}
 donas = {}
@@ -324,8 +306,12 @@ def main():
 
     # print(evaluaciones)    
     # print(len(evaluaciones["general"]))
-    generar_donas(df_mappeada, "general")
-    print(donas[tipo_de_reporte]) 
+    #generar_donas(df_mappeada, "general")
+    #print(donas[tipo_de_reporte])
+
+    colaborador = "Ana Aguirre"
+    temp_df = df_mappeada[df_mappeada[colaborador] == colaborador]
+    evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte)
 
 if __name__ == '__main__':
     main()
