@@ -88,11 +88,11 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
                         6: "Regular - Bueno", 8: "Bueno", 9: "Muy Bueno", 10: "Excelente"}
     ##Diccionario de colores para las diferentes gráficas
     marker_colors_servicios = {
-        'Encuesta de Mercado Laboral, Salarios, Estadísticos y Análisis de Mercado': "#1E3A5F",  # Azul oscuro
-        'Asesoría Legal': "#4B78A3",  # Azul medio
-        'PAD Ponte al Día': "#7FA5D0",  # Azul claro
-        'Desarrollo Organizacional': "#9B4D98",  # Morado suave
-        'Otro (especifique)': "#A3B8D8",  # Azul claro grisáceo
+        'Encuesta de Mercado Laboral, Salarios, Estadísticos y Análisis de Mercado': "#31c4be",  # Cyan suave con un toque verde
+        'Asesoría Legal': "#2b91a8",  # Azul intermedio con una pizca de verde
+        'PAD Ponte al Día': "#0098a0",  # Cyan-azulado intenso
+        'Desarrollo Organizacional': "#005c73",  # Azul oscuro con un tinte verde
+        'Otro (especifique)': "#1d3a4a"  # Azul verdoso marino
     }
 
     # marker_colors_calificaciones = {
@@ -105,15 +105,15 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
     # }
 
     marker_colors_calificaciones = {
-        0: "#D0E2F2",  # Azul muy claro
-        1: "#7FA5D0",  # Azul claro
-        3: "#A3B8D8",  # Azul grisáceo
-        5: "#4B78A3",  # Azul medio
-        6: "#9B4D98",  # Morado suave
-        8: "#1E3A5F",  # Azul oscuro
-        9: "#5A2A8C",  # Azul oscuro con matiz morado
-        10: "#274466"   # Azul marino
-    }
+         0: "#15263a",  # Azul casi negro (para las calificaciones más bajas)
+         1: "#1b2b4a",  # Azul muy oscuro
+         3: "#273c5e",  # Azul marino oscuro
+         5: "#3a4a87",  # Azul oscuro con matiz morado
+         6: "#004473",  # Azul oscuro
+         8: "#006cad",  # Azul corporativo intenso
+         9: "#326aa8",  # Azul intermedio
+         10: "#31bede"  # Azul claro corporativo (para las calificaciones más altas)
+}
 
 
     fig = make_subplots(rows=1, cols=2, specs=[[{"type": "bar"}, {"type": "pie"}]], subplot_titles=("Evaluación de desempeño", "Distribución de servicios brindados"))
@@ -229,8 +229,8 @@ def generar_donas(dataframe, tipo_de_reporte):
     df = dataframe
     global donas
     pastel_colors = {
-        'Sí': "#4B78A3",  # Azul
-        'No': "#6A2C4E"   # Burgundy
+         'Sí': "#326aa8",  # Azul corporativo
+         'No': "#c93458"   # Color burgundy
     }
 
     fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "pie"}]], subplot_titles=("Contrataría Nuevamente", "Recomendaría Nuestros Servicios"))
@@ -306,7 +306,7 @@ def main():
 
     # print(evaluaciones)    
     # print(len(evaluaciones["general"]))
-    #generar_donas(df_mappeada, "general")
+    generar_donas(df_mappeada, "general")
     #print(donas[tipo_de_reporte])
 
     colaborador = "Ana Aguirre"
