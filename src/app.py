@@ -8,7 +8,7 @@ from data_processing import limpiar_dataframe, mappear_df
 from plot_generator import evaluacion_desempeño, generar_donas
 from utils import generar_lista_de_colaboradores, cleanup_static
 
-app = Flask(__name__, template_folder="../templates")
+app = Flask(__name__, template_folder="../templates", static_folder="../static")
 
 barras = {}
 donas = {}
@@ -60,14 +60,14 @@ def upload_file():
         ##FUNCIÓN DE BARRAS
 
         ##FUNCIÓN DONAS
-        generar_donas(df_global, tipo_de_reporte)
-
+        generar_donas(df_global, tipo_de_reporte, donas)
+        print(donas)
         ##FUNCIÓN DE EVALUACIÓN DE DESEMPEÑO
         for colaborador in colaboradores:
             temp_df = df_global[df_global[colaborador] == colaborador]
             if len(temp_df) >= servicios_minimos:
-                evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte)
-
+                evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte, evaluaciones)
+        print(evaluaciones)
         ##FUNCIÓN DE TEXTO
 
         

@@ -76,13 +76,12 @@ import plotly.express as px
 
 
 ##AQUÍ VA A EMPEZAR LA FUNCIÓN 
-def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
+def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     """Esta función genera un reporte de desempeño para un colaborador en específico iterando a través de una lista 
     generada en utils.py. Se generan dos gráficas: una de barras stackeadas para las calificaciones y una de dona para
     los servicios brindados. Se utiliza plotly para generar las gráficas.
     Se debe inyectar una data base en formato de dataframe de pandas, el nombre del colaborador y el tipo de reporte."""	 
     
-    global evaluaciones    
     df = dataframe
     map_dict = {0: "Pésimo", 1: "Muy Malo", 3: "Malo", 5: "Regular - Malo",
                         6: "Regular - Bueno", 8: "Bueno", 9: "Muy Bueno", 10: "Excelente"}
@@ -146,7 +145,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
 
     ##Se calculan las barras stackeadas; se settea la base como 0 para que se vayan sumando las barras
     for col_name in columnas_iteradas:
-        cal_counts = df[col_name].value_counts().sort_index()
+        cal_counts = df[col_name].value_counts().sort_index(ascending=False)
         base = 0 
 
     ##Se genera una etiqueta cualitativa para las calificaciones y se calcula la altura de la barras. Se agregan las categorias al set de la leyenda
@@ -184,7 +183,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
         values=df['servicio'].value_counts().values,
         name="Servicio Brindado",
         hole=0.7,
-        textinfo="percent",
+        textinfo="label+percent",
         textposition="inside",
         showlegend=False,
         marker=dict(colors=[marker_colors_servicios[servicio] for servicio in df['servicio'].value_counts().index],
@@ -214,20 +213,21 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte):
         showlegend=True,
         hovermode = 'closest',
         autosize=True,
+        uniformtext_minsize=12,
+        uniformtext_mode='hide',
     )
 
-    #fig.show()
+    # fig.show()
     fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    evaluaciones[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
+    lista[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
 
 
-def generar_donas(dataframe, tipo_de_reporte):
+def generar_donas(dataframe, tipo_de_reporte, lista):
     """Esta función genera una gráfica de pastel para conocer la aceptación de los clientes respecto a los servicios brindados.
     Se utiliza plotly para generar la gráfica que contienen dos subplots, cada uno haciendo referencia a las preguntas 
     '¿Contratarías nuevamente nuestros servicios?'y '¿Recomendarías nuestros servicios?'."""	
 
     df = dataframe
-    global donas
     pastel_colors = {
          'Sí': "#326aa8",  # Azul corporativo
          'No': "#c93458"   # Color burgundy
@@ -278,15 +278,17 @@ def generar_donas(dataframe, tipo_de_reporte):
             bgcolor="rgba(255, 255, 255, 0.5)"
         ),
         autosize=True,
+        uniformtext_minsize=12,
+        uniformtext_mode='hide',
     )
     #fig.show()
     fig.write_html(f"static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
-    donas[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
+    lista[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
 
-barras = {}
-donas = {}
-evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
-texto = []
+# barras = {}
+# donas = {}
+# evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
+# texto = []
 
 def main():
     from data_processing import limpiar_dataframe, mappear_df
@@ -306,8 +308,8 @@ def main():
 
     # print(evaluaciones)    
     # print(len(evaluaciones["general"]))
-    generar_donas(df_mappeada, "general")
-    #print(donas[tipo_de_reporte])
+    # generar_donas(df_mappeada, "general")
+    # print(donas)
 
     colaborador = "Ana Aguirre"
     temp_df = df_mappeada[df_mappeada[colaborador] == colaborador]
