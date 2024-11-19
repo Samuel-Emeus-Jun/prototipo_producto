@@ -192,6 +192,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
         domain=dict(x=[0.55, 0.95], y=[0.1, 0.9])  # Control the size and position of the pie chart
     ), row=1, col=2)
 
+
     ##Se agregan las leyendas y se stackean las barras
     fig.update_layout(
         title_text=f"Evaluación de desempeño {tipo_de_reporte}: {colaborador}",
@@ -213,13 +214,23 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
         showlegend=True,
         hovermode = 'closest',
         autosize=True,
-        uniformtext_minsize=12,
-        uniformtext_mode='hide',
+        uniformtext_minsize=8,
+        uniformtext_mode='hide',)
+        # annotations = [dict(text=f"Servicios totales: {len(df)}", x=sum(fig.get_subplot(1, 2).x) / 2, y=0.5,
+        #     font_size=16, showarrow=False, xanchor="center")])
+
+    fig.add_annotation(
+        text=f"Total de<br>Servicios brindados:<br>{len(df)}",  # Text to display
+        x=0.83, y=0.5,  # Coordinates for the pie chart
+        xref='paper', yref='paper',
+        font=dict(size=14, color="black"),
+        showarrow=False
     )
 
-    # fig.show()
-    fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    lista[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
+
+    fig.show()
+    # fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
+    # lista[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
 
 
 def generar_donas(dataframe, tipo_de_reporte, lista):
@@ -278,7 +289,7 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
             bgcolor="rgba(255, 255, 255, 0.5)"
         ),
         autosize=True,
-        uniformtext_minsize=12,
+        uniformtext_minsize=8,
         uniformtext_mode='hide',
     )
     #fig.show()
@@ -287,7 +298,7 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
 
 # barras = {}
 # donas = {}
-# evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
+evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
 # texto = []
 
 def main():
@@ -313,7 +324,7 @@ def main():
 
     colaborador = "Ana Aguirre"
     temp_df = df_mappeada[df_mappeada[colaborador] == colaborador]
-    evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte)
+    evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte, evaluaciones)
 
 if __name__ == '__main__':
     main()
