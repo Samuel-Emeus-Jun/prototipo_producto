@@ -190,15 +190,15 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     # }
 
     marker_colors_calificaciones = {
-         0: "#15263a",  # Azul casi negro (para las calificaciones más bajas)
-         1: "#1b2b4a",  # Azul muy oscuro
-         3: "#273c5e",  # Azul marino oscuro
-         5: "#3a4a87",  # Azul oscuro con matiz morado
-         6: "#004473",  # Azul oscuro
-         8: "#006cad",  # Azul corporativo intenso
-         9: "#326aa8",  # Azul intermedio
-         10: "#31bede"  # Azul claro corporativo (para las calificaciones más altas)
-}
+        0: "#0a0c1a",  # Very dark navy blue (lowest score)
+        1: "#1a2450",  # Darker navy blue
+        3: "#2a3b70",  # Deep blue with more saturation
+        5: "#3f5aa0",  # Medium navy with a hint of brightness
+        6: "#31659b",  # Mid blue
+        8: "#4b85d1",  # Bright blue for higher scores
+        9: "#63a1e8",  # Light blue with high contrast
+        10: "#82c6ff"  # Brightest blue (highest score)
+    }
 
 
     fig = make_subplots(rows=1, cols=2, specs=[[{"type": "bar"}, {"type": "pie"}]], subplot_titles=("Evaluación de desempeño", "Distribución de servicios brindados"))
