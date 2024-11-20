@@ -62,6 +62,15 @@ def mappear_df(dataframe):
     return mapped_df
 
 
+def cortar_dataframe(dataframe, lapso):
+    ##Función para cortar el dataframe a un lapso de tiempo determinado
+
+    #Establecer la fecha límite para filtrar los datos
+    fecha_limite = datetime.now() - relativedelta(months=lapso)
+
+    #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
+    return dataframe[dataframe['Fecha'] > fecha_limite]
+
 
 ##FIltrar df obtenido de limpiar_df a 12 meses    
 def filtro_12_meses(df_general): 
