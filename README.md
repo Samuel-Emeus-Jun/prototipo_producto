@@ -8,5 +8,5 @@ UPG para el concurso de datos 2024.
 
 Instrucciones: 
 Para mayor comodidad se recomienda utilizar VSC.
-Una vez que se tenga el repositorio clonado, se abre el folder en donde se guardó el clon y se inserta en la terminal el comando "pip install requirements.txt" antes de ejecutar app.py.
+Una vez que se tenga el repositorio clonado, se abre el folder en donde se guardó el clon y se inserta en la terminal de VSC el comando "pip install requirements.txt" antes de ejecutar app.py por vez primera.
 
