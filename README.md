@@ -7,5 +7,6 @@ Hecha por estudiantes de la carrera de IED  de la
 UPG para el concurso de datos 2024.
 
 Instrucciones: 
-Una vez que se tenga el repositorio clonado, se abre el folder donde se guardó y se inserta en la terminal el comando "pip install requirements.txt" antes de ejecutar app.py.
 Para mayor comodidad se recomienda utilizar VSC.
+Una vez que se tenga el repositorio clonado, se abre el folder en donde se guardó el clon y se inserta en la terminal el comando "pip install requirements.txt" antes de ejecutar app.py.
+
