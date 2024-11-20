@@ -73,7 +73,7 @@ def filtro_12_meses(df_general):
 
 ##Filtrar df obtenido de limpiar_df a 3 meses
 def filtro_3_meses(df_general):
-    #Establecer la fecha límite para filtrar los datos
+    #Establecer la fecha límite para filtrar los datos.
     fecha_limite = datetime.now() - relativedelta(months=3)
     #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
     df_last_3_months=df_general[df_general['Fecha'] > fecha_limite]
