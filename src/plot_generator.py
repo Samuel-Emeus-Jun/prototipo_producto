@@ -171,6 +171,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     df = dataframe
     map_dict = {0: "Pésimo", 1: "Muy Malo", 3: "Malo", 5: "Regular - Malo",
                         6: "Regular - Bueno", 8: "Bueno", 9: "Muy Bueno", 10: "Excelente"}
+    
     ##Diccionario de colores para las diferentes gráficas
     marker_colors_servicios = {
         'Encuesta de Mercado Laboral, Salarios, Estadísticos y Análisis de Mercado': "#31c4be",  # Cyan suave con un toque verde
@@ -341,8 +342,6 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
         autosize=True,
         uniformtext_minsize=8,
         uniformtext_mode='hide',)
-        # annotations = [dict(text=f"Servicios totales: {len(df)}", x=sum(fig.get_subplot(1, 2).x) / 2, y=0.5,
-        #     font_size=16, showarrow=False, xanchor="center")])
 
     fig.add_annotation(
         text=f"Total de<br>Servicios brindados:<br>{len(df)}",  # Text to display

@@ -145,7 +145,7 @@ def reporte_trimestral():
 
     # GENERAR REPORTE ANUAL
 
-    tipo_de_reporte = "trimeestral"
+    tipo_de_reporte = "trimestral"
     servicios_minimos = 1
     lapso = 3
 
