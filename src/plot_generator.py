@@ -6,7 +6,9 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import plotly.express as px
 
-##DF PARA PRUEBAS
+
+##PRUEBA DE SUNBURST
+
 
 # data = {
 #     "servicio": ["servicio 1", "servicio 1", "servicio 3", "servicio 1", "servicio 2", "servicio 1", "servicio 3", "servicio 1", "servicio 2", "servicio 1", "servicio 3", "servicio 1"],
@@ -74,13 +76,97 @@ import plotly.express as px
 # fig.show()
 
 
+##AQUÍ VA LA FUNCIÓN DE LA BARRA DE SERVICIOS
 
-##AQUÍ VA A EMPEZAR LA FUNCIÓN 
+
+def generar_barra(dataframe, tipo_de_reporte, lista):
+    """Esta función genera una gráfica de barras para conocer la distribución de servicios brindados por la empresa.
+    Se utiliza plotly para generar la gráfica. se debe insertar el tipo de reporte que desea sea insertado en la gráfica y
+    la lista donde se almacenarán los url de las gráficas realizadas"""	
+
+    df = dataframe
+    df_relevant = df[['servicio', 'Atención brindada', 'Profesionalismo', 'Tiempo de entrega', 'Calidad del producto']]
+
+    # Calcular el conteo y los porcentajes de cada servicio
+    service_counts_normalized = df_relevant['servicio'].value_counts(normalize=True) * 100
+    service_counts = df_relevant['servicio'].value_counts()
+    # Calcular promedios por servicio para las métricas
+    service_means = df_relevant.groupby('servicio').mean()
+
+    # Configuración de colores
+    marker_colors_servicios = {
+        'Encuesta de Mercado Laboral, Salarios, Estadísticos y Análisis de Mercado': "#31c4be",  # Cyan suave con un toque verde
+        'Asesoría Legal': "#2b91a8",  # Azul intermedio con una pizca de verde
+        'PAD Ponte al Día': "#0098a0",  # Cyan-azulado intenso
+        'Desarrollo Organizacional': "#005c73",  # Azul oscuro con un tinte verde
+        'Otro (especifique)': "#1d3a4a"  # Azul verdoso marino
+    }
+
+    # Crear trazas para cada servicio en la barra apilada
+    fig = go.Figure()
+
+    for servicio, porcentaje in service_counts_normalized.items():
+        # Definir color del servicio
+        color = marker_colors_servicios.get(servicio, "#D0E2F2")  # Color de respaldo
+        
+        # Agregar traza con hover personalizado para cada servicio
+        fig.add_trace(
+            go.Bar(
+                y=["Servicios"],
+                x=[porcentaje],
+                name=servicio,
+                orientation='h',
+                marker=dict(color=color),
+                hovertemplate=(
+                    f"<b>{servicio}</b><br>" +
+                    f"Porcentaje: {porcentaje:.2f}%<br>" +
+                    f"Atención: {service_means.loc[servicio, 'Atención brindada']:.1f}<br>" +
+                    f"Velocidad: {service_means.loc[servicio, 'Tiempo de entrega']:.1f}<br>" +
+                    f"Profesionalismo: {service_means.loc[servicio, 'Profesionalismo']:.1f}<br>" +
+                    f"Calidad: {service_means.loc[servicio, 'Calidad del producto']:.1f}<extra></extra>"
+                ),
+                width = 0.35,
+                text = str(service_counts[servicio]),
+                textposition = 'inside',
+            )
+        )
+
+        # Personalizar la visualización para que solo sea la barra, sin ejes ni fondo
+        fig.update_layout(
+            title_text = f"Total de servicios brindados: {len(df)}",
+            title_x = 0,
+            title_y = 0.9,
+            title_font = dict(size=24),
+            barmode='stack',
+            showlegend=True,
+            legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-0.2,
+            xanchor="center",
+            x=0.5,
+            title_text="Servicios"
+            ),           
+            plot_bgcolor="white",
+            xaxis=dict(visible=False),
+            yaxis=dict(visible=False),
+            margin=dict(l=0, r=0, t=20, b=20)
+        )
+
+    fig.show()
+    #fig.write_html(f"static/{tipo_de_reporte}/barras/barra_{tipo_de_reporte}.html")
+    #lista[tipo_de_reporte] = [f"{tipo_de_reporte}/barras/barra_{tipo_de_reporte}.html"]##REVISAR SUBCARPETAS
+
+
+##AQUÍ VA LA FUNCIÓN DE EVALUACIÓN DE DESEMPEÑO
+
+
 def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     """Esta función genera un reporte de desempeño para un colaborador en específico iterando a través de una lista 
     generada en utils.py. Se generan dos gráficas: una de barras stackeadas para las calificaciones y una de dona para
     los servicios brindados. Se utiliza plotly para generar las gráficas.
-    Se debe inyectar una data base en formato de dataframe de pandas, el nombre del colaborador y el tipo de reporte."""	 
+    Se debe inyectar una data base en formato de dataframe de pandas, el nombre del colaborador y el tipo de reporte, así como 
+    la lista donde se almacenarán los url de las gráficas realizadas"""	 
     
     df = dataframe
     map_dict = {0: "Pésimo", 1: "Muy Malo", 3: "Malo", 5: "Regular - Malo",
@@ -177,6 +263,12 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     fig.update_yaxes(title_text="Metricas Aplicadas", row=1, col=1)
     fig.update_xaxes(title_text="Promedio de las Calificaciones", row=1, col=1)
 
+
+    ##Data extra para el menú hover
+    df_relevant = df[['servicio', 'Atención brindada', 'Profesionalismo', 'Tiempo de entrega', 'Calidad del producto']]
+    service_means = df_relevant.groupby('servicio').mean()
+    customdata = df['servicio'].map(service_means).apply(lambda x: x[['Atención brindada', 'Profesionalismo', 'Tiempo de entrega', 'Calidad del producto']].values).tolist()
+
     ##Se agrega la gráfica de dona para los servicios
     fig.add_trace(go.Pie(
         labels=df['servicio'].value_counts().index,
@@ -189,9 +281,31 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
         marker=dict(colors=[marker_colors_servicios[servicio] for servicio in df['servicio'].value_counts().index],
                     line=dict(color='white', width=1)),
         textfont_size=12,
-        domain=dict(x=[0.55, 0.95], y=[0.1, 0.9])  # Control the size and position of the pie chart
-    ), row=1, col=2)
+        domain=dict(x=[0.55, 0.95], y=[0.1, 0.9]),
+        customdata=customdata,
+        hovertemplate=(
+            "<b>%{label}</b><br>" +
+            "Atención: %{customdata[0][0]:.1f}<br>" +
+            "Profesionalismo: %{customdata[0][1]:.1f}<br>" +
+            "Velocidad: %{customdata[0][2]:.1f}<br>" +
+            "Calidad: %{customdata[0][3]:.1f}<extra></extra>"
+    ), row=1, col=2))
 
+
+    ##Se agrega la gráfica de dona para los servicios
+    # fig.add_trace(go.Pie(
+    #     labels=df['servicio'].value_counts().index,
+    #     values=df['servicio'].value_counts().values,
+    #     name="Servicio Brindado",
+    #     hole=0.7,
+    #     textinfo="label+percent",
+    #     textposition="inside",
+    #     showlegend=False,
+    #     marker=dict(colors=[marker_colors_servicios[servicio] for servicio in df['servicio'].value_counts().index],
+    #                 line=dict(color='white', width=1)),
+    #     textfont_size=12,
+    #     domain=dict(x=[0.55, 0.95], y=[0.1, 0.9])  # Control the size and position of the pie chart
+    # ), row=1, col=2)
 
     ##Se agregan las leyendas y se stackean las barras
     fig.update_layout(
@@ -229,14 +343,19 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
 
 
     fig.show()
-    # fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    # lista[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
+    #fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
+    #lista[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
+
+
+##AQUÍ VA LA FUNCIÓN DE DONAS
 
 
 def generar_donas(dataframe, tipo_de_reporte, lista):
     """Esta función genera una gráfica de pastel para conocer la aceptación de los clientes respecto a los servicios brindados.
     Se utiliza plotly para generar la gráfica que contienen dos subplots, cada uno haciendo referencia a las preguntas 
-    '¿Contratarías nuevamente nuestros servicios?'y '¿Recomendarías nuestros servicios?'."""	
+    '¿Contratarías nuevamente nuestros servicios?'y '¿Recomendarías nuestros servicios?'.
+    Se debe inyectar una data base en formato de dataframe de pandas, el tipo de reporte que se desea realizar y la lista donde se almacenarán 
+    los url de las gráficas realizadas"""	
 
     df = dataframe
     pastel_colors = {
@@ -296,7 +415,7 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
     fig.write_html(f"static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
     lista[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
 
-# barras = {}
+#barras = {}
 # donas = {}
 evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
 # texto = []
@@ -325,6 +444,8 @@ def main():
     colaborador = "Ana Aguirre"
     temp_df = df_mappeada[df_mappeada[colaborador] == colaborador]
     evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte, evaluaciones)
+
+    ##generar_barra(df_mappeada, "general", barras)
 
 if __name__ == '__main__':
     main()
