@@ -10,3 +10,5 @@ Instrucciones:
 Para mayor comodidad se recomienda utilizar VSC.
 Una vez que se tenga el repositorio clonado, se abre el folder en donde se guardó el clon y se inserta en la terminal de VSC el comando "pip install requirements.txt" antes de ejecutar app.py por vez primera.
 
+Requisitos: 
+VSC, Python, Git.
