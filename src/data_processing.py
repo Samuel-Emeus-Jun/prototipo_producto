@@ -1,6 +1,8 @@
 ##AQUÍ VAMOS A INSERTAR LAS FUNCIONES 
 ##DE PROCESAMIENTO DE DATOS
 import pandas as pd
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 ##TIMEDATE Completo 
 
@@ -62,7 +64,7 @@ def mappear_df(dataframe):
 
 
 ##FIltrar df obtenido de limpiar_df a 12 meses    
-def filtro_12_meses(): 
+def filtro_12_meses(df_general): 
     #Establecer la fecha límite para filtrar los datos
     fecha_limite = datetime.now() - relativedelta(months=12)
     #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
@@ -70,8 +72,8 @@ def filtro_12_meses():
 
 
 ##Filtrar df obtenido de limpiar_df a 3 meses
-def filtro_3_meses():
-    #Establecer la fecha límite para filtrar los datos
+def filtro_3_meses(df_general):
+    #Establecer la fecha límite para filtrar los datos.
     fecha_limite = datetime.now() - relativedelta(months=3)
     #Filtrar los datos de la columna 'Fecha' mayores a la fecha límite
     df_last_3_months=df_general[df_general['Fecha'] > fecha_limite]
