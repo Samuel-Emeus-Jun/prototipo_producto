@@ -263,33 +263,44 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     fig.update_yaxes(title_text="Metricas Aplicadas", row=1, col=1)
     fig.update_xaxes(title_text="Promedio de las Calificaciones", row=1, col=1)
 
-
+    
     ##Data extra para el menú hover
     df_relevant = df[['servicio', 'Atención brindada', 'Profesionalismo', 'Tiempo de entrega', 'Calidad del producto']]
     service_means = df_relevant.groupby('servicio').mean()
-    customdata = df['servicio'].map(service_means).apply(lambda x: x[['Atención brindada', 'Profesionalismo', 'Tiempo de entrega', 'Calidad del producto']].values).tolist()
 
-    ##Se agrega la gráfica de dona para los servicios
+    # Generate `text` with metric info for each service
+    labels_order = df['servicio'].value_counts().index  # Get services in the correct pie chart order
+    hover_text = [
+        f"Atención: {service_means.loc[servicio, 'Atención brindada']:.1f}<br>"
+        f"Profesionalismo: {service_means.loc[servicio, 'Profesionalismo']:.1f}<br>"
+        f"Velocidad: {service_means.loc[servicio, 'Tiempo de entrega']:.1f}<br>"
+        f"Calidad: {service_means.loc[servicio, 'Calidad del producto']:.1f}"
+        for servicio in labels_order
+    ]
+
+    # Define the pie chart using `text` for hover info
     fig.add_trace(go.Pie(
-        labels=df['servicio'].value_counts().index,
+        labels=labels_order,
         values=df['servicio'].value_counts().values,
         name="Servicio Brindado",
         hole=0.7,
-        textinfo="label+percent",
+        text=hover_text,  # Set hover text directly
+        textinfo="label+percent",  # Display label and percentage on the chart
         textposition="inside",
         showlegend=False,
-        marker=dict(colors=[marker_colors_servicios[servicio] for servicio in df['servicio'].value_counts().index],
-                    line=dict(color='white', width=1)),
+        marker=dict(
+            colors=[marker_colors_servicios[servicio] for servicio in labels_order],
+            line=dict(color='white', width=1)
+        ),
         textfont_size=12,
         domain=dict(x=[0.55, 0.95], y=[0.1, 0.9]),
-        customdata=customdata,
         hovertemplate=(
             "<b>%{label}</b><br>" +
-            "Atención: %{customdata[0][0]:.1f}<br>" +
-            "Profesionalismo: %{customdata[0][1]:.1f}<br>" +
-            "Velocidad: %{customdata[0][2]:.1f}<br>" +
-            "Calidad: %{customdata[0][3]:.1f}<extra></extra>"
-    ), row=1, col=2))
+            "Total servicios: %{value}<br>" +
+            "Porcentaje: %{percent}%<br>" +           
+            "%{text}<extra></extra>"
+        )  # Use text with pre-calculated metrics
+    ), row=1, col=2)
 
 
     ##Se agrega la gráfica de dona para los servicios
