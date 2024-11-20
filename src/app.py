@@ -4,8 +4,8 @@ from flask import Flask, render_template, request, redirect, url_for
 import pandas as pd
 import plotly as plt
 import plotly.express as px
-from data_processing import limpiar_dataframe, mappear_df
-from plot_generator import evaluacion_desempeño, generar_donas
+from data_processing import limpiar_dataframe, mappear_df, cortar_dataframe
+from plot_generator import evaluacion_desempeño, generar_donas, generar_barra
 from utils import generar_lista_de_colaboradores, cleanup_static
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
@@ -59,6 +59,8 @@ def upload_file():
 
         ##FUNCIÓN DE BARRAS
 
+        generar_barra(df_global, tipo_de_reporte, barras)
+
         ##FUNCIÓN DONAS
         generar_donas(df_global, tipo_de_reporte, donas)
         print(donas)
@@ -97,12 +99,83 @@ def reporte_general():
 # Ruta para el Reporte Anual
 @app.route('/anual')
 def reporte_anual():
-    return render_template('reporte_anual.html')
+    global barras, donas, evaluaciones, texto, colaboradores
+
+    # GENERAR REPORTE ANUAL
+
+    tipo_de_reporte = "anual"
+    servicios_minimos = 3
+    lapso = 12
+
+    #Generar el dataframe filtrado a 12 meses
+
+    df_cortada = cortar_dataframe(df_global, lapso)
+
+    ##FUNCIÓN DE BARRAS
+
+    generar_barra(df_cortada, tipo_de_reporte, barras)
+
+    ##FUNCIÓN DONAS
+
+    generar_donas(df_cortada, tipo_de_reporte, donas)
+    
+    ##FUNCIÓN DE EVALUACIÓN DE DESEMPEÑO
+
+    for colaborador in colaboradores:
+        temp_df = df_cortada[df_cortada[colaborador] == colaborador]
+        if len(temp_df) >= servicios_minimos:
+            evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte, evaluaciones)
+    
+    ##FUNCIÓN DE TEXTO
+
+        
+    return render_template('reporte_anual.html',
+                           tipo_de_reporte="anual",
+                           barras=barras,
+                           donas=donas,
+                           evaluaciones=evaluaciones,
+                           texto=texto,
+                           colaboradores=colaboradores)
 
 # Ruta para el Reporte Trimestral
 @app.route('/trimestral')
 def reporte_trimestral():
-    return render_template('reporte_trimestral.html')
+
+    global barras, donas, evaluaciones, texto, colaboradores
+
+    # GENERAR REPORTE ANUAL
+
+    tipo_de_reporte = "trimeestral"
+    servicios_minimos = 1
+    lapso = 3
+
+    #Generar el dataframe filtrado a 12 meses
+
+    df_cortada = cortar_dataframe(df_global, lapso)
+
+    ##FUNCIÓN DE BARRAS
+
+    generar_barra(df_cortada, tipo_de_reporte, barras)
+
+    ##FUNCIÓN DONAS
+
+    generar_donas(df_cortada, tipo_de_reporte, donas)
+    
+    ##FUNCIÓN DE EVALUACIÓN DE DESEMPEÑO
+
+    for colaborador in colaboradores:
+        temp_df = df_cortada[df_cortada[colaborador] == colaborador]
+        if len(temp_df) >= servicios_minimos:
+            evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte, evaluaciones)
+    
+    ##FUNCIÓN DE TEXTO
+    return render_template('reporte_trimestral.html',
+                           tipo_de_reporte="trimestral",
+                           barras=barras,
+                           donas=donas,
+                           evaluaciones=evaluaciones,
+                           texto=texto,
+                           colaboradores=colaboradores)
 
 if __name__ == '__main__':
     app.run(debug=True)
