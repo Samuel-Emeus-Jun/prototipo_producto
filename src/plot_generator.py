@@ -370,6 +370,15 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
     los url de las gráficas realizadas"""	
 
     df = dataframe
+
+    ##Data extra para el menú hover
+    df_relevant = df[['¿Contratarías nuevamente nuestros servicios?', '¿Recomendarías nuestros servicios?', 'servicio']]
+    no_services_recontrato = df_relevant[df['¿Contratarías nuevamente nuestros servicios?'] == 'No']['servicio'].value_counts()
+    no_services_recontrato_hover = "<br>".join([f"{servicio}: {count}" for servicio, count in no_services_recontrato.items()])
+    no_services_recomendacion = df_relevant[df['¿Recomendarías nuestros servicios?'] == 'No']['servicio'].value_counts()
+    no_services_recomendacion_hover = "<br>".join([f"{servicio}: {count}" for servicio, count in no_services_recomendacion.items()])
+
+
     pastel_colors = {
          'Sí': "#326aa8",  # Azul corporativo
          'No': "#c93458"   # Color burgundy
@@ -388,10 +397,14 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
         marker=dict(colors=[pastel_colors[respuesta] for respuesta in df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index],
                     line=dict(color='white', width=1)),
         textfont_size=12,
-        domain=dict(x=[0.0, 0.45], y=[0.1, 0.9])  # Control the size and position of the first pie chart
+        domain=dict(x=[0.0, 0.45], y=[0.1, 0.9]),  # Control the size and position of the first pie chart
+        hovertemplate=(
+            "<b>%{label}</b><br>" +
+            "Total: %{value}<br>" +
+            "Porcentaje: %{percent}<br>" +
+            "<extra></extra>"),
     ), row=1, col=1)
 
-    
     fig.add_trace(go.Pie(
         labels=df['¿Recomendarías nuestros servicios?'].value_counts().index,
         values=df['¿Recomendarías nuestros servicios?'].value_counts().values,
@@ -423,12 +436,30 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
         uniformtext_minsize=8,
         uniformtext_mode='hide',
     )
-    #fig.show()
+
+    ##Aquí se agregan los menús hover a las gráficas correspondientes, solo a la sección de "No"
+    fig.data[0].customdata = [no_services_recontrato_hover if label == 'No' else None for label in fig.data[0].labels]
+    fig.data[0].hovertemplate = (
+        "<b>%{label}</b><br>" +
+        "Total: %{value}<br>" +
+        "Porcentaje: %{percent}<br>" +
+        "%{customdata}<extra></extra>"
+        )
+    
+    fig.data[1].customdata = [no_services_recomendacion_hover if label == 'No' else None for label in fig.data[1].labels]
+    fig.data[1].hovertemplate = (
+        "<b>%{label}</b><br>" +
+        "Total: %{value}<br>" +
+        "Porcentaje: %{percent}<br>" +
+        "%{customdata}<extra></extra>"
+        )
+    
+    # fig.show()
     fig.write_html(f"static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
     lista[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
 
 #barras = {}
-# donas = {}
+#donas = {}
 # evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
 # texto = []
 
@@ -450,7 +481,7 @@ def main():
 
     # print(evaluaciones)    
     # print(len(evaluaciones["general"]))
-    # generar_donas(df_mappeada, "general")
+    # generar_donas(df_mappeada, "general", donas)
     # print(donas)
 
     # colaborador = "Ana Aguirre"

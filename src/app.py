@@ -65,7 +65,7 @@ def upload_file():
         ##FUNCIÓN DONAS
         generar_donas(df_global, tipo_de_reporte, donas)
         print(donas)
-        
+
         ##FUNCIÓN DE EVALUACIÓN DE DESEMPEÑO
         for colaborador in colaboradores:
             temp_df = df_global[df_global[colaborador] == colaborador]
@@ -145,11 +145,11 @@ def reporte_trimestral():
 
     global barras, donas, evaluaciones, texto, colaboradores
 
-    # GENERAR REPORTE ANUAL
+    # GENERAR REPORTE TRIMESTRAL
 
-    tipo_de_reporte = "trimestral"
-    servicios_minimos = 1
-    lapso = 3
+    tipo_de_reporte = "trimestral" ##VALORES A MODIFICAR PARA REPORTE CUSTOM
+    servicios_minimos = 1   ##VALORES A MODIFICAR PARA REPORTE CUSTOM
+    lapso = 3   ##VALORES A MODIFICAR PARA REPORTE CUSTOM
 
     #Generar el dataframe filtrado a 12 meses
 
@@ -172,7 +172,7 @@ def reporte_trimestral():
     
     ##FUNCIÓN DE TEXTO
     return render_template('reporte_trimestral.html',
-                           tipo_de_reporte="trimestral",
+                           tipo_de_reporte="trimestral", ##VALORES A MODIFICAR PARA REPORTE CUSTOM
                            barras=barras,
                            donas=donas,
                            evaluaciones=evaluaciones,
