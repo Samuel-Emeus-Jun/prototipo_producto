@@ -60,10 +60,12 @@ def upload_file():
         ##FUNCIÓN DE BARRAS
 
         generar_barra(df_global, tipo_de_reporte, barras)
+        print(barras)
 
         ##FUNCIÓN DONAS
         generar_donas(df_global, tipo_de_reporte, donas)
         print(donas)
+        
         ##FUNCIÓN DE EVALUACIÓN DE DESEMPEÑO
         for colaborador in colaboradores:
             temp_df = df_global[df_global[colaborador] == colaborador]
@@ -86,7 +88,7 @@ def upload_file():
 @app.route('/general')
 def reporte_general():
     global barras, donas, evaluaciones, texto, colaboradores
-    print(donas, evaluaciones)
+    # print(donas, evaluaciones)
     
     return render_template('reporte_general.html',
                            tipo_de_reporte="general",

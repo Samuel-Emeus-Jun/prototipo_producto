@@ -136,7 +136,7 @@ def generar_barra(dataframe, tipo_de_reporte, lista):
             title_text = f"Total de servicios brindados: {len(df)}",
             title_x = 0,
             title_y = 0.9,
-            title_font = dict(size=24),
+            title_font = dict(size=22),
             barmode='stack',
             showlegend=True,
             legend=dict(
@@ -153,9 +153,10 @@ def generar_barra(dataframe, tipo_de_reporte, lista):
             margin=dict(l=0, r=0, t=20, b=20)
         )
 
-    fig.show()
-    #fig.write_html(f"static/{tipo_de_reporte}/barras/barra_{tipo_de_reporte}.html")
-    #lista[tipo_de_reporte] = [f"{tipo_de_reporte}/barras/barra_{tipo_de_reporte}.html"]##REVISAR SUBCARPETAS
+    #fig.show()
+    fig.write_html(f"static/{tipo_de_reporte}/barras/barra_{tipo_de_reporte}.html")
+    lista[tipo_de_reporte] = f"{tipo_de_reporte}/barras/barra_{tipo_de_reporte}.html"##REVISAR SUBCARPETAS
+
 
 
 ##AQUÍ VA LA FUNCIÓN DE EVALUACIÓN DE DESEMPEÑO
@@ -319,11 +320,21 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     #     domain=dict(x=[0.55, 0.95], y=[0.1, 0.9])  # Control the size and position of the pie chart
     # ), row=1, col=2)
 
+    ##Se agrega la anotación de los servicios brindados
+
+    fig.add_annotation(
+        text=f"Total de<br>Servicios brindados:<br>{len(df)}",  # Text to display
+        x=0.845, y=0.5,  # Coordinates for the pie chart
+        xref='paper', yref='paper',
+        font=dict(size=14, color="black"),
+        showarrow=False
+    )
+
     ##Se agregan las leyendas y se stackean las barras
     fig.update_layout(
-        title_text=f"Evaluación de desempeño {tipo_de_reporte}: {colaborador}",
-        title_x = 0,
-        title_font = dict(size=24),
+        # title_text=f"Evaluación de desempeño {tipo_de_reporte}: {colaborador}",
+        # title_x = 0,
+        # title_font = dict(size=24),
         legend=dict(
             title="Calificaciones",
             orientation="v",
@@ -343,18 +354,9 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
         uniformtext_minsize=8,
         uniformtext_mode='hide',)
 
-    fig.add_annotation(
-        text=f"Total de<br>Servicios brindados:<br>{len(df)}",  # Text to display
-        x=0.83, y=0.5,  # Coordinates for the pie chart
-        xref='paper', yref='paper',
-        font=dict(size=14, color="black"),
-        showarrow=False
-    )
-
-
-    fig.show()
-    #fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    #lista[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
+    # fig.show()
+    fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
+    lista[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
 
 
 ##AQUÍ VA LA FUNCIÓN DE DONAS
@@ -373,12 +375,12 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
          'No': "#c93458"   # Color burgundy
     }
 
-    fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "pie"}]], subplot_titles=("Contrataría Nuevamente", "Recomendaría Nuestros Servicios"))
+    fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "pie"}]], subplot_titles=("...nos contratarían de nuevo?", "...recomendarían nuestros servicios"))
 
     fig.add_trace(go.Pie(
         labels=df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index,
         values=df['¿Contratarías nuevamente nuestros servicios?'].value_counts().values,
-        name="Contrataría Nuevamente",
+        #name="Contrataría Nuevamente",
         hole=0.7,
         textinfo="percent+label",
         textposition="inside",
@@ -393,7 +395,7 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
     fig.add_trace(go.Pie(
         labels=df['¿Recomendarías nuestros servicios?'].value_counts().index,
         values=df['¿Recomendarías nuestros servicios?'].value_counts().values,
-        name="Recomendaría Nuestros Servicios",
+        #name="Recomendaría Nuestros Servicios",
         hole=0.7,
         textinfo="percent+label",
         textposition="inside",
@@ -405,9 +407,9 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
     ), row=1, col=2)
         
     fig.update_layout(
-        title_text = f"Percepción {tipo_de_reporte} de nuestros clientes",
+        title_text = f"¿Nuestros clientes...",
         title_x = 0,
-        title_font = dict(size=24),
+        title_font = dict(size=22),
         legend=dict(
             title="Respuestas",
             orientation="h",
@@ -427,7 +429,7 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
 
 #barras = {}
 # donas = {}
-evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
+# evaluaciones = {"general": {}, "anual": {}, "trimestral": {}}
 # texto = []
 
 def main():
@@ -451,9 +453,9 @@ def main():
     # generar_donas(df_mappeada, "general")
     # print(donas)
 
-    colaborador = "Ana Aguirre"
-    temp_df = df_mappeada[df_mappeada[colaborador] == colaborador]
-    evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte, evaluaciones)
+    # colaborador = "Ana Aguirre"
+    # temp_df = df_mappeada[df_mappeada[colaborador] == colaborador]
+    # evaluacion_desempeño(temp_df, colaborador, tipo_de_reporte, evaluaciones)
 
     ##generar_barra(df_mappeada, "general", barras)
 
