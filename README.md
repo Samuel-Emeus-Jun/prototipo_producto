@@ -16,7 +16,7 @@ de las calificaciones otorgadas en las encuestas de satisfacción generadas para
 Clona el repositorio en tu archivo local.
 
 ```sh
-git clone 
+git clone https://github.com/Samuel-Emeus-Jun/prototipo_producto
 ```
 
 Accede a la carpeta donde guardaste el repositorio.
@@ -37,9 +37,9 @@ Escribir en la terminal de VSC:
 pip install requirements.txt
 ```
 
-##### Una vez completados estos pasos, se puede ejecutar app.py
-
-
+**Una vez completados estos pasos, se puede ejecutar app.py**
+##
+##
 ### _Uso sin pre-requisitos - sólo para pruebas-_
 
  - Crea un fork a partir de este repositorio
@@ -48,4 +48,12 @@ pip install requirements.txt
  - ```sh
     pip install requirements.txt
     ```
-##### Una vez completados estos pasos, se puede ejecutar app.py
+**Una vez completados estos pasos, se puede ejecutar app.py**
+###  
+###
+###
+###
+###
+###
+>DISCLAIMER: ESTA ES UNA APLICACIÓN DE PRUEBA HECHA PARA UN CONCURSO EN ESPECÍFICO. 
+>SEGURO ESTARÁ LLENA DE BUGS ASÍ QUE NADIE DEBERÍA USARLA.
