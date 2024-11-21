@@ -1,17 +1,51 @@
 # RAPPTOR (test)
 ## _Generador de Reportes_
 
-App diseñada para cargar archivos .csv
-y generar un reporte trimestral, anual y general
-de las calificaciones otorgadas en las encuestas
-de satisfacción generadas para CATCH Consulting.
+App diseñada para cargar archivos .csv y generar un reporte trimestral, anual y general
+de las calificaciones otorgadas en las encuestas de satisfacción generadas para CATCH Consulting.
 
-Hecha por estudiantes de la carrera de IED  de la 
-UPG para el concurso de datos 2024.
+>Hecha por estudiantes de la carrera de IED  de la UPG para el concurso de datos 2024.
 
-Instrucciones antes de ejecutar app.py por primera vez: 
-Para mayor comodidad se recomienda utilizar VSC.
-Una vez que se tenga el repositorio clonado, se abre el folder en donde se guardó el clon y se recomienda generar un entorno virtual con el comando "venv <nombre_entorno>" en la terminal de VSC, para después insertar en la misma terminal el comando "pip install requirements.txt". Completando estos pasos se puede ejecutar app.py
+#### Pre requisitos:
+ - VSC
+ - Python 3.10
+ - Git
 
-Requisitos: 
-VSC, Python, Git.
+#### Instrucciones antes de ejecutar app.py por primera vez:
+
+Clona el repositorio en tu archivo local.
+
+```sh
+git clone 
+```
+
+Accede a la carpeta donde guardaste el repositorio.
+
+```sh
+cd Proto_Type
+```
+
+Se recomienda generar un entorno virtual (Opcional).
+
+```sh
+venv <nombre_entorno>
+```
+
+Escribir en la terminal de VSC:
+
+```sh
+pip install requirements.txt
+```
+
+##### Una vez completados estos pasos, se puede ejecutar app.py
+
+
+### _Uso sin pre-requisitos - sólo para pruebas-_
+
+ - Crea un fork a partir de este repositorio
+ - En tu fork local, presiona en la flecha que está al lado del botón verde "<> Code"
+ - Crea un nuevo codespace haciendo click en el símbolo "+"
+ - ```sh
+    pip install requirements.txt
+    ```
+##### Una vez completados estos pasos, se puede ejecutar app.py
