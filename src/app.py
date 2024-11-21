@@ -1,14 +1,15 @@
 ##ESTE ES NUESTRO MAIN 
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import pandas as pd
 import plotly as plt
 import plotly.express as px
 from data_processing import limpiar_dataframe, mappear_df, cortar_dataframe
 from plot_generator import evaluacion_desempeño, generar_donas, generar_barra
-from utils import generar_lista_de_colaboradores, cleanup_static
+from utils import generar_lista_de_colaboradores, cleanup_static, lista_encabezados, encabezados_sin_indice
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
+app.secret_key = 'some_secret_key'
 
 barras = {}
 donas = {}
@@ -45,6 +46,14 @@ def upload_file():
 
         # Leer el archivo CSV directamente en un DataFrame
         df = pd.read_csv(file, header = [0,1])
+        encabezados_df = encabezados_sin_indice(df)
+        print(encabezados_df)
+        if not all(elem in encabezados_df for elem in lista_encabezados):
+
+            flash("Este archivo no podrá ser procesado. Por favor verifica el formato del archivo.")
+            return redirect(url_for('upload_form'))
+    
+
         df_limpia = limpiar_dataframe(df)
         colaboradores = generar_lista_de_colaboradores(df_limpia)
         df_global = mappear_df(df_limpia)
@@ -80,7 +89,8 @@ def upload_file():
             
         # REDIRIGE A REPORTE GENERAL
         return redirect(url_for('reporte_general'))
-    
+        
+        
     return 'El archivo debe ser un archivo CSV (.csv)'
 
 
