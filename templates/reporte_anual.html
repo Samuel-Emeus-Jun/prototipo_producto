@@ -1,11 +1,41 @@
 {% extends "base.html" %}
 
-{% block title %}Reporte Trimestral{% endblock %}
+{% block title %}Reporte {{ tipo_de_reporte | capitalize }}{% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Reporte Trimestral</h1>
-    <div class="alert alert-info text-center" role="alert">
-        Cargando el reporte trimestral...
-    </div>
-{% endblock %}
+    <h1 class="text-center">Reporte {{ tipo_de_reporte }} sobre la evaluación de nuestros clientes</h1><br><br><br>
 
+    <!-- Bloque 1: Gráfica de Barras -->
+    <section>
+        <h2>Nuestros servicios:</h2><br>
+        <h5>Distribución {{ tipo_de_reporte }} de los servicios brindados.</h5><br>
+        <iframe src="{{ url_for('static', filename=barras[tipo_de_reporte]) }}" width="100%" height="400px"></iframe>
+    </section><br><br><br>
+
+    <!-- Bloque 2: Gráfica de Dona -->
+    <section>
+        <h2>Percepción {{ tipo_de_reporte }} de los servicios brindados:</h2><br>
+        <h5>Distribución de respuestas de satisfacción.</h5><br>
+        <iframe src="{{ url_for('static', filename=donas[tipo_de_reporte]) }}" width="100%" height="400px"></iframe>
+    </section><br><br><br>
+
+    <!-- Bloque 3: Evaluación de Desempeño por Colaborador  -->
+    <section>
+        <h2>Nuestro Equipo:</h2><br>
+        <h5>Análisis detallado por colaborador.</h5><br><br>
+    
+        {% for colaborador, graficas in evaluaciones[tipo_de_reporte].items() %}
+            <h3>Evaluación de desempeño {{ tipo_de_reporte }}: {{ colaborador | replace("_", " ") }}.</h3>
+            {% for grafica in graficas %}
+                <iframe src="{{ url_for('static', filename=grafica) }}" width="100%" height="600px"></iframe><br><br>
+            {% endfor %}
+        {% endfor %}
+    </section><br><br><br>
+
+    <!-- Bloque 4: Texto Generado por IA -->
+    <section>
+        <h2>Lo que opinan nuestros clientes:</h2><br>
+        <h5>Comentarios y observaciones sobre los servicios brindados.</h5><br>
+        {# <p>{{ texto_ia }}</p> #}
+    </section><br><br><br>
+{% endblock %}
