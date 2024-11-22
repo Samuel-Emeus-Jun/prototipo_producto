@@ -58,7 +58,7 @@ _(Opcional, pero muy recomendable. Si decides no hacerlo, salta al paso 6)_
     ```sh
     pip install -r requirements.txt
     ```
-   - _Toma su tiempo, se paciente.
+   - _Toma su tiempo, se paciente._
    
  #
 **Una vez completados estos pasos, se puede ejecutar app.py**
