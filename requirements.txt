@@ -1,5 +1,6 @@
-##LO FREEZEAMOS AL TERMINAR
-
-FLASK
-PANDAS
-PLOTLY
+Flask==3.0.3
+openpyxl==3.1.2
+pandas==2.0.2
+plotly==5.23.0
+DateTime==5.2
+python-dateutil==2.8.2
