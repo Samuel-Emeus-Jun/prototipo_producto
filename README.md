@@ -51,12 +51,12 @@ _(Opcional, pero muy recomendable. Si decides no hacerlo, salta al paso 6)_
  - Abre una nueva terminal PowerShell
  - Escribe en la terminal
      ```sh
-     .\venv\Scripts\Activate
+     .\<nombre_entorno>\Scripts\Activate
     ```
  - Asegúrate de que la terminal activa sea del entorno virtual (debería decir algo como (venv) al principio de la linea).
  - Instala las dependencias listadas en requirements.txt:
     ```sh
-    pip install requirements.txt
+    pip install -r requirements.txt
     ```
    - _Toma su tiempo, se paciente.
    
