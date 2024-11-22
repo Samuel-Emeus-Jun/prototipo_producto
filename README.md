@@ -59,7 +59,7 @@ _(Opcional, pero muy recomendable. Si decides no hacerlo, salta al paso 6)_
     pip install -r requirements.txt
     ```
    - _Toma su tiempo, se paciente._
-- _No olvides añadir <nombre_entorno> a .gitignore para evitar errores al pushear en git_ 
+- _No olvides añadir <nombre_entorno> al archivo .gitignore para evitar errores al pushear en git_ 
    
  #
 **Una vez completados estos pasos, se puede ejecutar app.py**
