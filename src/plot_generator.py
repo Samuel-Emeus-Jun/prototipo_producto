@@ -1,5 +1,4 @@
-##AQUÍ VAMOS A HACER LAS FUNCIONES 
-##PARA GENERAR GRÁFICOS
+##AQUÍ VAMOS A HACER LAS FUNCIONES PARA GENERAR GRÁFICOS
 
 import pandas as pd
 from plotly.subplots import make_subplots
@@ -7,7 +6,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 
-##PRUEBA DE SUNBURST
+##PRUEBA DE SUNBURST NO IMPLEMENTADA EN VERSIÓN FINAL
 
 
 # data = {
@@ -85,11 +84,12 @@ def generar_barra(dataframe, tipo_de_reporte, lista):
     la lista donde se almacenarán los url de las gráficas realizadas"""	
 
     df = dataframe
-    df_relevant = df[['servicio', 'Atención brindada', 'Profesionalismo', 'Tiempo de entrega', 'Calidad del producto']]
+    df_relevant = df[['servicio', 'Atención brindada', 'Profesionalismo', 'Tiempo de entrega', 'Calidad del producto']] ##Se filtran las columnas relevantes
 
     # Calcular el conteo y los porcentajes de cada servicio
     service_counts_normalized = df_relevant['servicio'].value_counts(normalize=True) * 100
     service_counts = df_relevant['servicio'].value_counts()
+
     # Calcular promedios por servicio para las métricas
     service_means = df_relevant.groupby('servicio').mean()
 
@@ -153,9 +153,9 @@ def generar_barra(dataframe, tipo_de_reporte, lista):
             margin=dict(l=0, r=0, t=20, b=20)
         )
 
-    #fig.show()
+    #fig.show() ##Solo para pruebas
     fig.write_html(f"static/{tipo_de_reporte}/barras/barra_{tipo_de_reporte}.html")
-    lista[tipo_de_reporte] = f"{tipo_de_reporte}/barras/barra_{tipo_de_reporte}.html"##REVISAR SUBCARPETAS
+    lista[tipo_de_reporte] = f"{tipo_de_reporte}/barras/barra_{tipo_de_reporte}.html"
 
 
 
@@ -170,10 +170,11 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     la lista donde se almacenarán los url de las gráficas realizadas"""	 
     
     df = dataframe
+    ##Mapa para las calificaciones
     map_dict = {0: "Pésimo", 1: "Muy Malo", 3: "Malo", 5: "Regular - Malo",
                         6: "Regular - Bueno", 8: "Bueno", 9: "Muy Bueno", 10: "Excelente"}
     
-    ##Diccionario de colores para las diferentes gráficas
+    ##Diccionarios de colores para las diferentes gráficas
     marker_colors_servicios = {
         'Encuesta de Mercado Laboral, Salarios, Estadísticos y Análisis de Mercado': "#31c4be",  # Cyan suave con un toque verde
         'Asesoría Legal': "#2b91a8",  # Azul intermedio con una pizca de verde
@@ -181,15 +182,6 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
         'Desarrollo Organizacional': "#005c73",  # Azul oscuro con un tinte verde
         'Otro (especifique)': "#1d3a4a"  # Azul verdoso marino
     }
-
-    # marker_colors_calificaciones = {
-    #     "Pésimo" : "#ff0000",
-    #     "Malo" : "#ff8000",
-    #     "Regular" : "#ffbf00",
-    #     "Bueno" : "#80ff00",
-    #     "Muy Bueno" : "#00ff00",
-    #     "Excelente" : "#00ff80",
-    # }
 
     marker_colors_calificaciones = {
         0: "#0a0c1a",  # Very dark navy blue (lowest score)
@@ -201,7 +193,6 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
         9: "#63a1e8",  # Light blue with high contrast
         10: "#82c6ff"  # Brightest blue (highest score)
     }
-
 
     fig = make_subplots(rows=1, cols=2, specs=[[{"type": "bar"}, {"type": "pie"}]], subplot_titles=("Evaluación de desempeño", "Distribución de servicios brindados"))
 
@@ -261,6 +252,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
                 ), row=1, col=1)
 
             base += altura_barra ##Aquí se van sumando las alturas de las barras
+    
     ##Se mofifican las anotaciones de los ejes
     fig.update_yaxes(title_text="Metricas Aplicadas", row=1, col=1)
     fig.update_xaxes(title_text="Promedio de las Calificaciones", row=1, col=1)
@@ -270,8 +262,8 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     df_relevant = df[['servicio', 'Atención brindada', 'Profesionalismo', 'Tiempo de entrega', 'Calidad del producto']]
     service_means = df_relevant.groupby('servicio').mean()
 
-    # Generate `text` with metric info for each service
-    labels_order = df['servicio'].value_counts().index  # Get services in the correct pie chart order
+    ## Generar el texto para el menú hover
+    labels_order = df['servicio'].value_counts().index  # Obtener los valores ordenados
     hover_text = [
         f"Atención: {service_means.loc[servicio, 'Atención brindada']:.1f}<br>"
         f"Profesionalismo: {service_means.loc[servicio, 'Profesionalismo']:.1f}<br>"
@@ -280,14 +272,14 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
         for servicio in labels_order
     ]
 
-    # Define the pie chart using `text` for hover info
+    ##Crear la gráfica de dona para los servicios con texto hover
     fig.add_trace(go.Pie(
         labels=labels_order,
         values=df['servicio'].value_counts().values,
         name="Servicio Brindado",
         hole=0.7,
-        text=hover_text,  # Set hover text directly
-        textinfo="label+percent",  # Display label and percentage on the chart
+        text=hover_text,  
+        textinfo="label+percent",  
         textposition="inside",
         showlegend=False,
         marker=dict(
@@ -301,30 +293,13 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
             "Total servicios: %{value}<br>" +
             "Porcentaje: %{percent}%<br>" +           
             "%{text}<extra></extra>"
-        )  # Use text with pre-calculated metrics
+        )  # Incluir el texto personalizado
     ), row=1, col=2)
 
-
-    ##Se agrega la gráfica de dona para los servicios
-    # fig.add_trace(go.Pie(
-    #     labels=df['servicio'].value_counts().index,
-    #     values=df['servicio'].value_counts().values,
-    #     name="Servicio Brindado",
-    #     hole=0.7,
-    #     textinfo="label+percent",
-    #     textposition="inside",
-    #     showlegend=False,
-    #     marker=dict(colors=[marker_colors_servicios[servicio] for servicio in df['servicio'].value_counts().index],
-    #                 line=dict(color='white', width=1)),
-    #     textfont_size=12,
-    #     domain=dict(x=[0.55, 0.95], y=[0.1, 0.9])  # Control the size and position of the pie chart
-    # ), row=1, col=2)
-
-    ##Se agrega la anotación de los servicios brindados
-
+    ##Se agrega la anotación de total de servicios a la dona 
     fig.add_annotation(
-        text=f"Total de<br>Servicios brindados:<br>{len(df)}",  # Text to display
-        x=0.845, y=0.5,  # Coordinates for the pie chart
+        text=f"Total de<br>Servicios brindados:<br>{len(df)}",  # Texto de la anotación
+        x=0.845, y=0.5,  # Coordenadas de la anotación
         xref='paper', yref='paper',
         font=dict(size=14, color="black"),
         showarrow=False
@@ -334,7 +309,7 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
     fig.update_layout(
         # title_text=f"Evaluación de desempeño {tipo_de_reporte}: {colaborador}",
         # title_x = 0,
-        # title_font = dict(size=24),
+        # title_font = dict(size=22),
         legend=dict(
             title="Calificaciones",
             orientation="v",
@@ -354,9 +329,9 @@ def evaluacion_desempeño(dataframe, colaborador, tipo_de_reporte, lista):
         uniformtext_minsize=8,
         uniformtext_mode='hide',)
 
-    # fig.show()
+    # fig.show() ##Solo para pruebas
     fig.write_html(f"static/{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html")
-    lista[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]##REVISAR SUBCARPETAS
+    lista[tipo_de_reporte][colaborador] = [f"{tipo_de_reporte}/evaluaciones/evaluacion_{tipo_de_reporte}_{colaborador}.html"]
 
 
 ##AQUÍ VA LA FUNCIÓN DE DONAS
@@ -386,6 +361,8 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
 
     fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "pie"}]], subplot_titles=("...nos contratarían de nuevo?", "...recomendarían nuestros servicios"))
 
+
+    ##Dona de re contratación
     fig.add_trace(go.Pie(
         labels=df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index,
         values=df['¿Contratarías nuevamente nuestros servicios?'].value_counts().values,
@@ -397,7 +374,7 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
         marker=dict(colors=[pastel_colors[respuesta] for respuesta in df['¿Contratarías nuevamente nuestros servicios?'].value_counts().index],
                     line=dict(color='white', width=1)),
         textfont_size=12,
-        domain=dict(x=[0.0, 0.45], y=[0.1, 0.9]),  # Control the size and position of the first pie chart
+        domain=dict(x=[0.0, 0.45], y=[0.1, 0.9]),  
         hovertemplate=(
             "<b>%{label}</b><br>" +
             "Total: %{value}<br>" +
@@ -405,6 +382,7 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
             "<extra></extra>"),
     ), row=1, col=1)
 
+    ##Dona de recomendación
     fig.add_trace(go.Pie(
         labels=df['¿Recomendarías nuestros servicios?'].value_counts().index,
         values=df['¿Recomendarías nuestros servicios?'].value_counts().values,
@@ -416,7 +394,7 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
         marker=dict(colors=[pastel_colors[respuesta] for respuesta in df['¿Recomendarías nuestros servicios?'].value_counts().index],
                     line=dict(color='white', width=1)),
         textfont_size=12,
-        domain=dict(x=[0.55, 1.0], y=[0.1, 0.9])  # Control the size and position of the second pie chart
+        domain=dict(x=[0.55, 1.0], y=[0.1, 0.9])  
     ), row=1, col=2)
         
     fig.update_layout(
@@ -454,9 +432,13 @@ def generar_donas(dataframe, tipo_de_reporte, lista):
         "%{customdata}<extra></extra>"
         )
     
-    # fig.show()
+    # fig.show() ##Solo para pruebas
     fig.write_html(f"static/{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html")
-    lista[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"#REVISAR SUBCARPETAS
+    lista[tipo_de_reporte] = f"{tipo_de_reporte}/donas/donas_{tipo_de_reporte}.html"
+
+
+
+##SOLO PARA PRUEBAS 
 
 #barras = {}
 #donas = {}

@@ -116,7 +116,7 @@ def reporte_anual():
     # GENERAR REPORTE ANUAL
 
     tipo_de_reporte = "anual"
-    servicios_minimos = 3
+    servicios_minimos = 2
     lapso = 12
 
     #Generar el dataframe filtrado a 12 meses
