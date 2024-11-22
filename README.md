@@ -8,7 +8,7 @@ de las calificaciones otorgadas en las encuestas de satisfacción generadas para
 
 ### Pre requisitos:
  - VSC
- - Python 3.10
+ - Python 
  - Git
 
 ### Instrucciones antes de ejecutar app.py por primera vez:
@@ -23,7 +23,7 @@ Inicia VS Code y asegúrate de que tengas las extensiones de Git y Python instal
  - Escribe Git: Clone y selecciona la opción.
  - Pega la URL del repositorio de GitHub que quieres clonar.
    ```sh
-     https://github.com/
+     https://github.com/Samuel-Emeus-Jun/prototipo_producto
    ```
  - Selecciona una carpeta en tu computadora para guardar el proyecto.
 
@@ -53,8 +53,6 @@ _(Opcional, pero muy recomendable. Si decides no hacerlo, salta al paso 6)_
      ```sh
      .\venv\Scripts\Activate
     ```
-
-
  - Asegúrate de que la terminal activa sea del entorno virtual (debería decir algo como (venv) al principio de la linea).
  - Instala las dependencias listadas en requirements.txt:
     ```sh
